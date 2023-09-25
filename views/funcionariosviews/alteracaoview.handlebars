@@ -1,0 +1,28 @@
+<div class="box-header-equipamento">
+  <div class="card-body">
+    <h3>Alteração de equipamento</h3>
+    <form action="/equipamentoroutes/alterarroute" method="POST">
+      <input type="hidden" name="id" value="{{equipamento.id}}">
+      <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" placeholder="Nome do equipamento" class="form-control" value={{equipamento.nome}}>
+        <br>
+      <label for="nome">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" placeholder="Descrição do equipamento" class="form-control" value={{equipamento.descricao}}>
+        <br>
+      <label for="nome">Código:</label>
+        <input type="text" id="codigo" name="codigo" placeholder="Código do equipamento" class="form-control" value={{equipamento.codigo}}>
+        <br>
+      <label for="nome">Número de série:</label>
+        <input type="text" id="numeroserie" name="numeroserie" placeholder="Numero de série do equipamento" class="form-control" value={{equipamento.numeroserie}}>
+        <br>
+      <label for="nome">Imagem:</label>
+        <input type="file" id="imagem" name="imagem" placeholder="Imagem do equipamento" class="form-control" value={{equipamento.imagem}}>
+        <br>
+      <button type="submit" class="btn btn-success">Alterar equipamento</button>
+    </form>
+  </div>
+</div>
+
+{{#each erros}}
+  <div class="alert alert-danger">{{texto}}</div>
+{{/each}}

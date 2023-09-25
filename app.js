@@ -1,87 +1,96 @@
-const express = require("express");
-const path = require("path");
-const mysql = require("mysql2");
-const dotenv = require('dotenv');
-const jwt = require("jsonwebtoken");
+//-------------------------------------------------------------------------------------------------
+// Módulos {{{
 
-dotenv.config({ path: './.env'})
-
-const app = express();
-
-const db = mysql.createConnection({
-    host: process.env.DATABASE_HOST, // Quando botar para hospedar, colocar aqui o endereço IP
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE
+const express = require('express')
+const handlebars = require('express-handlebars')
+const session = require('express-session')
+const flash = require('connect-flash')
+const bodyParser = require('body-parser')
+const path = require('path')
+const usuario = require('./controllers/usuariocontroller')
+const empresa = require('./controllers/empresacontroller')
+const passport = require('passport')
+const router = require('./controllers/usuariocontroller')
+const app = express()
+require("./config/auth")(passport)
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, 'public', 'uploads'),
+  filename: (req, file, cb) => {
+    const extrairNome = path.extname(file.originalname);
+    const filename = `${Date.now()}${extrairNome}`;
+    cb(null, filename);
+  }
 });
+const upload = multer({
+  storage: storage
+});
+// }}}
+//-------------------------------------------------------------------------------------------------
+// Sessão
 
-const publicDirectory = path.join(__dirname, './public');
-app.use(express.static(publicDirectory));
+app.use(session({
+  secret: 'crudapp',
+  resave: true,
+  saveUninitialized: true
+}))
 
-//Analise o bodies codificados (conforme enviados por forms html)
-app.use(express.urlencoded({ extended:false}));
-//Analise JSON bodies (conforme enviados por clientes API)
-app.use(express.json());
+app.use(passport.initialize())
+app.use(passport.session());
 
-app.set("view engine", "hbs");
-
-db.connect( (err) =>{
-    if(err) {
-        console.log(err);
-    }
-    else {
-        console.log("MySql Contectou-se...");
-    }
+app.use(flash())
+//-------------------------------------------------------------------------------------------------  
+//middleware
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.error_msg = req.flash('error_msg')
+  res.locals.error = req.flash("error")
+  res.locals.user = req.user || null;
+  next()
 })
+// Body Parser
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+//-------------------------------------------------------------------------------------------------  
+// Handlebars
+app.engine('handlebars', handlebars.engine({
+  defaultLayout: 'main',
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  },
+  partialsDir: [
+    'views/layouts/'
+  ]
+}))
+app.set('view engine', 'handlebars')
+//-------------------------------------------------------------------------------------------------  
+// Caminho bootstrap
+app.use(express.static(path.join(__dirname, 'views/layouts/bootstrap')))
+app.use(express.static(path.join(__dirname, 'public')));
+// }}}
+//-------------------------------------------------------------------------------------------------
 
-//Defina rotas
-app.use('/', require('./routes/pages'));
-app.use('/auth', require('./routes/auth'));
-
-app.listen(3000, () =>{
-    console.log("Servidor rodando na porta 3000");
+// Rotas {{{
+app.get('/', (req, res) => {
+  res.render('home')
 })
+app.get('/cadastro', (req, res) => {
+  res.render('cadastro')
+})
+app.get('/login', (req, res) => {
+  res.render('login')
+})
+//  
+app.use('/usuarioroutes', usuario), // prefixo para rotas de usuario
+app.use('/empresaroutes', empresa) // prefixo para rotas de equipamento
 
-function verificarToken(req, res, next) {
-    const token = req.cookies.token || req.headers['x-access-token'];
-
-    if (!token) {
-        return res.redirect('/login'); // Redirecione para a página de login se não houver token
-    }
-
-    jwt.verify(token, 'seu_segredo_secreto', (err, decoded) => {
-        if (err) {
-            return res.redirect('/login'); // Redirecione se o token não for válido
-        }
-
-        // O token é válido, você pode armazenar as informações do usuário no `req` se desejar
-        req.usuario = decoded.usuario;
-        next();
-    });
-}
-
-
-
-// Função para criar e enviar um token após o login
-function enviarToken(usuario, res) {
-    const token = jwt.sign({ usuario }, 'seu_segredo_secreto', { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true });
-    res.redirect('/criacaoEmpresa');
-}
-
-// Rota de login
-app.post('/login', (req, res) => {
-    // Lógica de verificação de credenciais
-    const usuarioAutenticado = verificarCredenciais(req.body);
-
-    if (usuarioAutenticado) {
-        enviarToken(usuarioAutenticado, res);
-    } else {
-        res.redirect('/login');
-    }
+//}}}
+//-------------------------------------------------------------------------------------------------
+// Servidor {{{
+const PORT = 3000
+app.listen(PORT, () => {
+  console.log('Servidor rodando! Porta 3000')
 });
-
-app.get('/criacaoEmpresa', verificarToken, (req, res) => {
-    // Esta rota só será acessível por usuários autenticados
-    res.render('criacaoEmpresa');
-});
+//}}}
+//-------------------------------------------------------------------------------------------------

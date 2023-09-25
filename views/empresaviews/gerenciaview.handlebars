@@ -1,0 +1,33 @@
+<div class="box-header-equipamento mb-4">
+  <h2>
+      Bem-vindo a seção de empresas!
+  </h2>
+  <a href="/empresaroutes/exibirinclusaoroute"><button class="btn btn-success">Incluir Empresa</button></a>
+</div>
+{{#each empresas}}
+<div class="box-header-equipamento mb-4">
+  <div class="card-body">
+    <h4>{{nomeEmpresa}}</h4>
+    <small>CNPJ: {{CNPJ}}</small>
+    <br>
+    <small>CEP: {{CEP}}</small>
+    <br>
+    <small>Endereço da empresa: {{enderecoEmpresa}}</small>
+    <br>
+    <small>Telefone da empresa: {{telefoneEmpresa}}</small>
+    <br>
+    <small>Email da empresa: {{emailEmpresa}}</small>
+    <br>
+    <small>Tipo juridico da empresa: {{tipoJuridicoEmpresa}}</small>
+    <br>
+    <a href="/empresaroutes/alteracaoroute/{{id}}"><button class="btn btn-success mt-4">Alterar
+        empresa</button></a>
+    <form action="/empresaroutes/excluirroute" method="POST">
+      <input type="hidden" name="id" value="{{id}}">
+      <button type="submit" class="btn btn-danger mt-2">Arquivar empresa</button>
+    </form>
+  </div>
+</div>
+{{else}}
+<h4 class="mt-3" id="nenhumEquipamentoh4">Nenhuma empresa cadastrada!</h4>
+{{/each}}

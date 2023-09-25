@@ -1,0 +1,96 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.body-main{
+    background-color: #4D565E;
+}
+
+.ola{
+    color: white;
+}
+
+/* Estilização equipamento */
+.box-header-equipamento{
+    display: flex;
+    justify-content: space-between;
+    background-color: #343A40;
+    padding: 15px;
+    border-radius: 15px;
+}
+.box-header-equipamento label{
+    color: white;
+}
+.box-header-equipamento h3{
+    text-align: center;
+    color: white;
+}
+.box-header-equipamento h2{
+    color: white;
+}
+.box-header-equipamento button{
+    margin-top: 0.45vh;
+    background-color: #8898A8;
+    border-color: #8898A8;
+    width: 100%;
+}
+#nenhumEquipamentoh4{
+    padding: 15px;
+    color: white;
+}
+.box-header-equipamento small{
+    font-size: medium;
+    color: white;
+}
+.box-header-equipamento h4{
+    font-size:xx-large;
+    color: white;
+}
+
+input[type=file]::file-selector-button {
+    border: 1px solid black;
+    padding: .2em .4em;
+    border-radius: .2em;
+    background-color: white;
+    transition: 1s;
+  }
+  
+  input[type=file]::file-selector-button:hover {
+    background-color: #343A40;
+    border: 2px solid #343A40;
+    color: white;
+  }
+@media screen and (max-width: 767px) {
+    .box-header-equipamento button{
+        margin-top: 2.5vh;
+    }
+  }
+
+/* Estilização login, cadastro */
+#card-login{
+    background-color: #343A40;
+    height: 60vh;
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15vh;
+    margin-bottom: 5vh;
+}
+
+#card-login label{
+    color: white;
+}
+
+#card-login h1{
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+}
+#card-login button{
+    width: 100%;
+    background-color: #8898A8;
+    color: white;
+    border: 1px solid #8898A8;
+    margin-top: 5vh;
+}

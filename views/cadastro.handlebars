@@ -1,0 +1,24 @@
+<div class="card" id="card-login">
+  <h1>CADASTRO</h1>
+  <div class="card-body">
+    <form action="/usuarioroutes/incluirroute" method="POST">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control">
+      <br>
+      <label for="nome">Telefone:</label>
+      <input type="text" id="telefone" name="telefone" placeholder="Numero de telefone do usuário" class="form-control">
+      <br>
+      <label for="nome">E-mail:</label>
+      <input type="text" id="email" name="email" placeholder="E-mail do usuário" class="form-control">
+      <br>
+      <label for="nome">Senha:</label>
+      <input type="text" id="senha" name="senha" placeholder="Senha do usuário" class="form-control">
+      <br>
+      <button type="submit" class="btn btn-success">Cadastrar-se</button>
+    </form>
+  </div>
+</div>
+
+{{#each erros}}
+<div>{{texto}}</div>
+{{/each}}

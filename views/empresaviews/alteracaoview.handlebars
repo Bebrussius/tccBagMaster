@@ -1,0 +1,34 @@
+<div class="box-header-equipamento">
+  <div class="card-body">
+    <h3>Alteração de equipamento</h3>
+    <form action="/empresaroutes/alterarroute" method="POST">
+    <input type="hidden" name="id" value="{{empresas.id}}">
+      <label for="nome">Nome da empresa:</label>
+        <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da empresa" class="form-control" value={{empresas.nomeEmpresa}}>
+        <br>
+      <label for="nome">CNPJ:</label>
+        <input type="text" id="CNPJ" name="CNPJ" placeholder="CNPJ" class="form-control" value={{empresas.CNPJ}}>
+        <br>
+      <label for="nome">CEP:</label>
+        <input type="text" id="CEP" name="CEP" placeholder="CEP" class="form-control" value={{empresas.CEP}}>
+        <br>
+      <label for="nome">Endereço da empresa:</label>
+        <input type="text" id="enderecoEmpresa" name="enderecoEmpresa" placeholder="Endereço da empresa" class="form-control" value={{empresas.enderecoEmpresa}}>
+        <br>
+      <label for="nome" id="label-file">Telefone:</label>
+        <input type="text" id="telefoneEmpresa" name="telefoneEmpresa" placeholder="Telefone de contato da empresa" class="form-control" value={{empresas.telefoneEmpresa}}>
+        <br>
+      <label for="nome" id="label-file">Email:</label>
+        <input type="email" id="emailEmpresa" name="emailEmpresa" placeholder="Email de contato da empresa" class="form-control" value={{empresas.emailEmpresa}}>
+        <br>  
+      <label for="nome" id="label-file">Tipo Jurídico:</label>
+        <input type="text" id="tipoJuridicoEmpresa" name="tipoJuridicoEmpresa" placeholder="Tipo jurídico da empresa" class="form-control" value={{empresas.tipoJuridicoEmpresa}}>
+        <br>             
+      <button type="submit" class="btn btn-success">Alterar empresa</button>
+    </form>
+  </div>
+</div>
+
+{{#each erros}}
+  <div class="alert alert-danger">{{texto}}</div>
+{{/each}}
