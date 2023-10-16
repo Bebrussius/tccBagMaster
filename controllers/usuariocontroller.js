@@ -7,15 +7,17 @@ const { hash } = require('bcryptjs')
 const passport = require('passport')
 const {isAuthenticaded} = require("../helpers/isAuthenticated")
 //-------------------------------------------------------------------------------------------------
-router.get('/',(req,res) => {
-  Usuario.findAll().then((usuarios) => {
-    res.render('funcionariosviews/gerenciaview',{usuarios:usuarios})
+router.get('/', isAuthenticaded, (req, res) => {
+  Usuario.findAll({
+    order: [['createdAt', 'DESC']] // Isso classificará por data de criação decrescente (mais recente primeiro)
+  }).then((usuarios) => {
+    res.render('funcionariosviews/gerenciaview', { usuarios: usuarios });
   }).catch((erro) => {
-    req.flash('erros_msg','Houve ou erro ao listar usuários!')
-    console.log(erro)
-    res.redirect('/')
-  })
-})
+    req.flash('erros_msg', 'Houve um erro ao listar funcionários!');
+    console.log(erro);
+    res.redirect('/');
+  });
+});
 //-------------------------------------------------------------------------------------------------
 router.get('/exibirinclusaoroute',isAuthenticaded,(req,res) => {
   res.render('funcionariosviews/inclusaoview')
@@ -35,45 +37,48 @@ router.post('/incluirroute',(req,res) => {
   if (!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
     erros.push({texto:'Senha inválida!'})
   }
+  if (!req.body.funcao || typeof req.body.funcao == undefined || req.body.funcao == null) {
+    erros.push({texto:'Função inválida!'})
+  }
   if (erros.length > 0) {
     res.render('/inclusaoview',{erros:erros})
   } else {
     Usuario.findOne({ where: {email:req.body.email}}).then((usuario) => {
       if(usuario){
         req.flash("error_msg", "Já existe um usuário com esse email no sistema");
-        res.redirect("/cadastro");
+        res.redirect("/usuarioroutes");
       } else {
         const novoUsuario = new Usuario({
           nome: req.body.nome,
           telefone: req.body.telefone,
           email: req.body.email,
-          senha: req.body.senha
-        })
+          senha: req.body.senha,
+          funcao: req.body.funcao
+        });
 
-        bcrypt.genSalt(10, (erro, salt) =>{
-          bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
-            if(erro){
-              req.flash("error_msg", "Houve um erro durante o cadastro do usuário");
-              res.redirect("/");
-            }
-
-            novoUsuario.senha = hash;
-
-            novoUsuario.save().then(() =>{
-              req.flash("succes_msg", "Usuário criado com sucesso!");
-              res.redirect("/");
-            }).catch((err) =>{
-              req.flash("error_msg", "Houve um erro na criação do usuário!")
-              res.redirect("/cadastro")
-            })
-          })
-        })
+        novoUsuario.save().then(() =>{
+          req.flash("success_msg", "Usuário criado com sucesso!");
+          res.redirect("/");
+        }).catch((err) =>{
+          req.flash("error_msg", "Houve um erro na criação do usuário!")
+          res.redirect("/usuarioroutes");
+        });
       }
-    })
+    });
   }
 });
-
-router.post('/incluirroutefuncionarios',(req,res) => {
+//-------------------------------------------------------------------------------------------------
+router.get('/alteracaoroute/:id',isAuthenticaded,(req,res) => {
+  Usuario.findOne({where:{id:req.params.id}}).then((usuarios) => {    
+    res.render('funcionariosviews/alteracaoview',{usuarios:usuarios})
+  }).catch((err) => {
+    req.flash('erros_msg','Não foi possível encontrar o equipamento!')
+    console.log(erro)
+    res.redirect('/usuarioroutes')
+  })
+})
+//-------------------------------------------------------------------------------------------------
+router.post('/alterarroute',isAuthenticaded,(req,res) => {
   var erros = []
   if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
     erros.push({texto:'Nome inválido!'})
@@ -87,44 +92,45 @@ router.post('/incluirroutefuncionarios',(req,res) => {
   if (!req.body.senha || typeof req.body.senha == undefined || req.body.senha == null) {
     erros.push({texto:'Senha inválida!'})
   }
+  if (!req.body.funcao || typeof req.body.funcao == undefined || req.body.funcao == null) {
+    erros.push({texto:'Função inválida!'})
+  }
   if (erros.length > 0) {
-    res.render('/inclusaoview',{erros:erros})
+    res.render('usuarioviews/alteracaoview',{erros:erros})
   } else {
-    Usuario.findOne({ where: {email:req.body.email}}).then((usuario) => {
-      if(usuario){
-        req.flash("error_msg", "Já existe um usuário com esse email no sistema");
-        res.redirect("/cadastro");
-      } else {
-        const novoUsuario = new Usuario({
-          nome: req.body.nome,
-          telefone: req.body.telefone,
-          email: req.body.email,
-          senha: req.body.senha
-        })
-
-        bcrypt.genSalt(10, (erro, salt) =>{
-          bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
-            if(erro){
-              req.flash("error_msg", "Houve um erro durante o cadastro do usuário");
-              res.redirect("/");
-            }
-
-            novoUsuario.senha = hash;
-
-            novoUsuario.save().then(() =>{
-              req.flash("succes_msg", "Usuário criado com sucesso!");
-              res.redirect("/usuarioroutes");
-            }).catch((err) =>{
-              req.flash("error_msg", "Houve um erro na criação do usuário!")
-              res.redirect("/cadastro")
-            })
-          })
-        })
-      }
+    Usuario.findOne({where:{id:req.body.id}}).then((usuarios) => {
+      usuarios.nome = req.body.nome,
+      usuarios.telefone = req.body.telefone,
+      usuarios.email = req.body.email,
+      usuarios.senha = req.body.senha,
+      usuarios.funcao = req.body.funcao;
+      usuarios.save().then(() => {
+        req.flash('success_msg','Funcionário alterado com sucesso!')
+        res.redirect('/usuarioroutes')
+      }).catch((erro) => {
+        req.flash('error_msg','Não foi possível alterar o funcionário!')
+        console.log(erro)
+        res.redirect('/usuarioroutes')
+      })
+    }).catch((erro) => {
+      req.flash('error_msg','Não foi possível encontrar o funcionário!')
+      console.log(erro)
+      res.redirect('/usuarioroutes')
     })
   }
-});
-
+})
+//-------------------------------------------------------------------------------------------------
+router.post('/excluirroute',isAuthenticaded,(req,res) => {
+  Usuario.destroy({where:{id:req.body.id}}).then(() => {
+    req.flash('success_msg','Funcionário aqruivada com sucesso!')
+    res.redirect('/usuarioroutes')
+  }).catch((erro) => {
+    req.flash('error_msg','Não foi possível arquivar o funcionário!')
+    console.log(erro)
+    res.redirect('/usuarioroutes')
+  })
+})
+//-------------------------------------------------------------------------------------------------
 router.post('/login', (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/empresaroutes",
@@ -132,14 +138,13 @@ router.post('/login', (req, res, next) => {
     failureFlash: true
   })(req, res, next)
 })
-
+//-------------------------------------------------------------------------------------------------
 router.get('/logout', (req, res, next) => {
   req.logout(function(err) {
       if (err) { return next(err) }
       res.redirect('/')
     })
 })
-
 //-------------------------------------------------------------------------------------------------
 module.exports = router
 //-------------------------------------------------------------------------------------------------

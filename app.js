@@ -53,17 +53,24 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 //-------------------------------------------------------------------------------------------------  
 // Handlebars
-app.engine('handlebars', handlebars.engine({
+const hbs = handlebars.create({
   defaultLayout: 'main',
   runtimeOptions: {
     allowProtoPropertiesByDefault: true,
     allowProtoMethodsByDefault: true,
   },
+  helpers: {
+    eq: function (a, b) {
+      return a === b;
+    }
+  },
   partialsDir: [
     'views/layouts/'
   ]
-}))
-app.set('view engine', 'handlebars')
+});
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
 //-------------------------------------------------------------------------------------------------  
 // Caminho bootstrap
 app.use(express.static(path.join(__dirname, 'views/layouts/bootstrap')))

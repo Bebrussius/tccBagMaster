@@ -14,8 +14,10 @@
     <br>
     <small>Senha: {{senha}}</small>
     <br>
-    <a href="/equipamentoroutes/alteracaoroute/{{id}}"><button class="btn btn-success mt-4">Alterar funcionário</button></a>
-    <form action="/equipamentoroutes/excluirroute" method="POST">
+    <small>Função: {{funcao}}</small>
+    <br>
+    <a href="/usuarioroutes/alteracaoroute/{{id}}"><button class="btn btn-success mt-4">Alterar funcionário</button></a>
+    <form action="/usuarioroutes/excluirroute" method="POST">
       <input type="hidden" name="id" value="{{id}}">
       <button type="submit" class="btn btn-danger mt-2">Arquivar funcionário</button>
     </form>

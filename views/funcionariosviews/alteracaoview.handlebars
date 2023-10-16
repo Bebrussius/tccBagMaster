@@ -1,24 +1,28 @@
 <div class="box-header-equipamento">
   <div class="card-body">
-    <h3>Alteração de equipamento</h3>
-    <form action="/equipamentoroutes/alterarroute" method="POST">
-      <input type="hidden" name="id" value="{{equipamento.id}}">
+    <h3>Alteração de funcionário</h3>
+    <form action="/usuarioroutes/alterarroute" method="POST">
+      <input type="hidden" name="id" value="{{usuarios.id}}">
       <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" placeholder="Nome do equipamento" class="form-control" value={{equipamento.nome}}>
-        <br>
-      <label for="nome">Descrição:</label>
-        <input type="text" id="descricao" name="descricao" placeholder="Descrição do equipamento" class="form-control" value={{equipamento.descricao}}>
-        <br>
-      <label for="nome">Código:</label>
-        <input type="text" id="codigo" name="codigo" placeholder="Código do equipamento" class="form-control" value={{equipamento.codigo}}>
-        <br>
-      <label for="nome">Número de série:</label>
-        <input type="text" id="numeroserie" name="numeroserie" placeholder="Numero de série do equipamento" class="form-control" value={{equipamento.numeroserie}}>
-        <br>
-      <label for="nome">Imagem:</label>
-        <input type="file" id="imagem" name="imagem" placeholder="Imagem do equipamento" class="form-control" value={{equipamento.imagem}}>
-        <br>
-      <button type="submit" class="btn btn-success">Alterar equipamento</button>
+      <input type="text" id="nome" name="nome" placeholder="Nome do funcionário" class="form-control" value="{{usuarios.nome}}">
+      <br>
+      <label for="telefone">Telefone:</label>
+      <input type="text" id="telefone" name="telefone" placeholder="Telefone do funcionário" class="form-control" value="{{usuarios.telefone}}">
+      <br>
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" placeholder="Email do funcionário" class="form-control" value="{{usuarios.email}}">
+      <br>
+      <label for="senha">Senha:</label>
+      <input type="text" id="senha" name="senha" placeholder="Senha do funcionário" class="form-control" value="{{usuarios.senha}}">
+      <br>
+<label for="funcao">Função:</label>
+<select id="funcao" name="funcao" class="form-control">
+  <option value="Administrador" {{#if (eq usuarios.funcao "Administrador")}}selected{{/if}}>Administrador</option>
+  <option value="Empresa" {{#if (eq usuarios.funcao "Empresa")}}selected{{/if}}>Função Empresa</option>
+  <option value="Pedidos" {{#if (eq usuarios.funcao "Pedidos")}}selected{{/if}}>Função Pedidos</option>
+</select>
+
+      <button type="submit" class="btn btn-success">Alterar funcionário</button>
     </form>
   </div>
 </div>
