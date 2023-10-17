@@ -3,11 +3,11 @@ const express = require('express')
 const router = express.Router()
 const Empresa = require('../models/empresamodel')
 const {isAuthenticaded} = require("../helpers/isAuthenticated")
-const {isFuncaoEmpresas} = require('../helpers/isFuncaoEmpresas');
+const {isFuncaoPedidos} = require('../helpers/isFuncaoPedidos');
 //-------------------------------------------------------------------------------------------------
-router.get('/',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
+router.get('/',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   Empresa.findAll().then((empresas) => {
-    res.render('empresaviews/gerenciaview',{empresas:empresas})
+    res.render('pedidosviews/gerenciaview',{empresas:empresas})
   }).catch((erro) => {
     req.flash('erros_msg','Houve ou erro ao listar equipamentos!')
     console.log(erro)
@@ -15,11 +15,11 @@ router.get('/',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
   })
 })
 //-------------------------------------------------------------------------------------------------
-router.get('/exibirinclusaoroute',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
+router.get('/exibirinclusaoroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   res.render('empresaviews/inclusaoview')
 })
 //-------------------------------------------------------------------------------------------------
-router.post('/incluirroute',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
+router.post('/incluirroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   var erros = []
   if (!req.body.nomeEmpresa || typeof req.body.nomeEmpresa == undefined || req.body.nomeEmpresa == null) {
     erros.push({texto:'Nome da empresa inválido!'})
@@ -64,7 +64,7 @@ router.post('/incluirroute',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
   }
 })
 //-------------------------------------------------------------------------------------------------
-router.get('/alteracaoroute/:id',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
+router.get('/alteracaoroute/:id',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   Empresa.findOne({where:{id:req.params.id}}).then((empresas) => {    
     res.render('empresaviews/alteracaoview',{empresas:empresas})
   }).catch((err) => {
@@ -74,7 +74,7 @@ router.get('/alteracaoroute/:id',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
   })
 })
 //-------------------------------------------------------------------------------------------------
-router.post('/alterarroute',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
+router.post('/alterarroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   var erros = []
   if (!req.body.nomeEmpresa || typeof req.body.nomeEmpresa == undefined || req.body.nomeEmpresa == null) {
     erros.push({texto:'Nome da empresa inválido!'})
@@ -124,7 +124,7 @@ router.post('/alterarroute',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
   }
 })
 //-------------------------------------------------------------------------------------------------
-router.post('/excluirroute',isAuthenticaded,isFuncaoEmpresas,(req,res) => {
+router.post('/excluirroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   Empresa.destroy({where:{id:req.body.id}}).then(() => {
     req.flash('success_msg','Empresa aqruivada com sucesso!')
     res.redirect('/empresaroutes')

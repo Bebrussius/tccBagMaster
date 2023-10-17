@@ -6,8 +6,9 @@ const bcrypt = require('bcryptjs')
 const { hash } = require('bcryptjs')
 const passport = require('passport')
 const {isAuthenticaded} = require("../helpers/isAuthenticated")
+const {isFuncaoAdministrador} = require("../helpers/isFuncaoAdministrador")
 //-------------------------------------------------------------------------------------------------
-router.get('/', isAuthenticaded, (req, res) => {
+router.get('/', isAuthenticaded,isFuncaoAdministrador,(req, res) => {
   Usuario.findAll({
     order: [['createdAt', 'DESC']] // Isso classificará por data de criação decrescente (mais recente primeiro)
   }).then((usuarios) => {
@@ -19,7 +20,7 @@ router.get('/', isAuthenticaded, (req, res) => {
   });
 });
 //-------------------------------------------------------------------------------------------------
-router.get('/exibirinclusaoroute',isAuthenticaded,(req,res) => {
+router.get('/exibirinclusaoroute',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
   res.render('funcionariosviews/inclusaoview')
 })
 //-------------------------------------------------------------------------------------------------
@@ -68,7 +69,7 @@ router.post('/incluirroute',(req,res) => {
   }
 });
 //-------------------------------------------------------------------------------------------------
-router.get('/alteracaoroute/:id',isAuthenticaded,(req,res) => {
+router.get('/alteracaoroute/:id',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
   Usuario.findOne({where:{id:req.params.id}}).then((usuarios) => {    
     res.render('funcionariosviews/alteracaoview',{usuarios:usuarios})
   }).catch((err) => {
@@ -120,7 +121,7 @@ router.post('/alterarroute',isAuthenticaded,(req,res) => {
   }
 })
 //-------------------------------------------------------------------------------------------------
-router.post('/excluirroute',isAuthenticaded,(req,res) => {
+router.post('/excluirroute',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
   Usuario.destroy({where:{id:req.body.id}}).then(() => {
     req.flash('success_msg','Funcionário aqruivada com sucesso!')
     res.redirect('/usuarioroutes')
@@ -133,7 +134,7 @@ router.post('/excluirroute',isAuthenticaded,(req,res) => {
 //-------------------------------------------------------------------------------------------------
 router.post('/login', (req, res, next) => {
   passport.authenticate("local", {
-    successRedirect: "/empresaroutes",
+    successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true
   })(req, res, next)

@@ -8,25 +8,46 @@
       <li class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(página atual)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/empresaroutes">Empresas</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/usuarioroutes">Pedidos</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/usuarioroutes">Funcionários</a>
-      </li>
       {{#if user}}
-
-      <li class="nav-item">
-        <a class="nav-link" href="/usuarioroutes/logout">Logout</a>
-      </li>
+        {{#if (eq user.funcao 'Administrador')}}
+          <!-- Mostrar todas as guias para o usuário "Administrador" -->
+          <li class="nav-item">
+            <a class="nav-link" href="/empresaroutes">Empresas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/pedidoroutes">Pedidos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/usuarioroutes">Funcionários</a>
+          </li>
+        {{else}}
+          {{#if (eq user.funcao 'Empresa')}}
+            <!-- Não mostrar a guia "Pedidos" para usuários com função "Empresa" -->
+            <li class="nav-item">
+              <a class="nav-link" href="/empresaroutes">Empresas</a>
+            </li>
+            {{#if (eq user.funcao 'Pedidos')}}
+              <!-- Mostrar a guia "Pedidos" apenas para usuários com função "Pedidos" -->
+              <li class="nav-item">
+                <a class="nav-link" href="/pedidoroutes">Pedidos</a>
+              </li>
+            {{/if}}
+          {{else}}
+            <!-- Não mostrar a guia "Funcionários" para usuários com função "Pedidos" -->
+            <li class="nav-item">
+              <a class="nav-link" href="/pedidoroutes">Pedidos</a>
+            </li>
+          {{/if}}
+        {{/if}}
+        <li class="nav-item">
+          <a class="nav-link" href="/usuarioroutes/logout">Logout</a>
+        </li>
       {{else}}
-      <li class="nav-item">
-        <a class="nav-link" href="/login">Login</a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
       {{/if}}
     </ul>
   </div>
 </nav>
+
