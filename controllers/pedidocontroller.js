@@ -1,137 +1,174 @@
 //-------------------------------------------------------------------------------------------------
 const express = require('express')
 const router = express.Router()
+const Pedido = require('../models/pedidosmodel')
 const Empresa = require('../models/empresamodel')
+const Usuario = require('../models/usuariomodel')
 const {isAuthenticaded} = require("../helpers/isAuthenticated")
 const {isFuncaoPedidos} = require('../helpers/isFuncaoPedidos');
 //-------------------------------------------------------------------------------------------------
 router.get('/',isAuthenticaded,isFuncaoPedidos,(req,res) => {
-  Empresa.findAll().then((empresas) => {
-    res.render('pedidosviews/gerenciaview',{empresas:empresas})
+  Pedido.findAll({
+    include: [Empresa, Usuario],
+  }).then((pedidos) => {
+    res.render('pedidosviews/gerenciaview', { pedidos: pedidos });
   }).catch((erro) => {
-    req.flash('erros_msg','Houve ou erro ao listar equipamentos!')
-    console.log(erro)
-    res.redirect('/')
-  })
+    req.flash('erros_msg', 'Houve um erro ao listar os pedidos!');
+    console.log(erro);
+    res.redirect('/');
+  });
 })
 //-------------------------------------------------------------------------------------------------
+router.get('/obterempresas', isAuthenticaded, isFuncaoPedidos, (req, res) => {
+  Empresa.findAll().then((empresas) => {
+    res.json(empresas);
+  }).catch((erro) => {
+    console.log(erro);
+    res.status(500).json({ error: 'Erro ao buscar empresas' });
+  });
+});
+router.get('/obterfuncionarios', isAuthenticaded, isFuncaoPedidos, (req, res) => {
+  Usuario.findAll().then((usuarios) => {
+    res.json(usuarios);
+  }).catch((erro) => {
+    console.log(erro);
+    res.status(500).json({ error: 'Erro ao buscar funcionários' });
+  });
+});
+//-------------------------------------------------------------------------------------------------
 router.get('/exibirinclusaoroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
-  res.render('empresaviews/inclusaoview')
+  res.render('pedidosviews/inclusaoview')
 })
 //-------------------------------------------------------------------------------------------------
 router.post('/incluirroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   var erros = []
-  if (!req.body.nomeEmpresa || typeof req.body.nomeEmpresa == undefined || req.body.nomeEmpresa == null) {
-    erros.push({texto:'Nome da empresa inválido!'})
+  if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+    erros.push({texto:'Nome do pedido inválido!'})
   }
-  if (!req.body.CNPJ || typeof req.body.CNPJ == undefined || req.body.CNPJ == null) {
-    erros.push({texto:'CNPJ inválido!'})
+  if (!req.body.corSacola || typeof req.body.corSacola == undefined || req.body.corSacola == null) {
+    erros.push({texto:'Cor da sacola inválida!'})
   }
-  if (!req.body.CEP || typeof req.body.CEP == undefined || req.body.CEP == null) {
-    erros.push({texto:'CEP inválido!'})
+  if (!req.body.corTinta || typeof req.body.corTinta == undefined || req.body.corTinta == null) {
+    erros.push({texto:'Cor da tinta inválida!'})
   }
-  if (!req.body.enderecoEmpresa || typeof req.body.enderecoEmpresa == undefined || req.body.enderecoEmpresa == null) {
-    erros.push({texto:'Endereço da empresa inválido!'})
+  if (!req.body.quantidade || typeof req.body.quantidade == undefined || req.body.quantidade == null) {
+    erros.push({texto:'Quantidade inválida!'})
   }
-  if (!req.body.telefoneEmpresa || typeof req.body.telefoneEmpresa == undefined || req.body.telefoneEmpresa == null) {
-    erros.push({texto:'Telefone da empresa inválido!'})
+  if (!req.body.tamanho || typeof req.body.tamanho == undefined || req.body.tamanho == null) {
+    erros.push({texto:'Tamanho inválido!'})
   }
-  if (!req.body.emailEmpresa || typeof req.body.emailEmpresa == undefined || req.body.emailEmpresa == null) {
-    erros.push({texto:'Email da empresa inválido!'})
+  if (!req.body.tipo || typeof req.body.tipo == undefined || req.body.tipo == null) {
+    erros.push({texto:'Tipo inválido!'})
   }
-  if (!req.body.tipoJuridicoEmpresa || typeof req.body.tipoJuridicoEmpresa == undefined || req.body.tipoJuridicoEmpresa == null) {
-    erros.push({texto:'Tipo jurídico da empresa inválido!'})
+  if (!req.body.preco || typeof req.body.preco == undefined || req.body.preco == null) {
+    erros.push({texto:'Preco inválido!'})
+  }
+  if (!req.body.empresaPedido || typeof req.body.empresaPedido == undefined || req.body.empresaPedido == null) {
+    erros.push({texto:'Empresa que fez o pedido inválida!'})
+  }
+  if (!req.body.funcionarioPedido || typeof req.body.funcionarioPedido == undefined || req.body.funcionarioPedido == null) {
+    erros.push({texto:'Funcionario que adicionou pedido inválido!'})
   }
   if (erros.length > 0) {
-    res.render('empresaviews/inclusaoview',{erros:erros})
+    res.render('pedidosviews/inclusaoview',{erros:erros})
   } else {
-    Empresa.create({
-      nomeEmpresa:req.body.nomeEmpresa,
-      CNPJ:req.body.CNPJ,
-      CEP:req.body.CEP,
-      enderecoEmpresa:req.body.enderecoEmpresa,
-      telefoneEmpresa:req.body.telefoneEmpresa,
-      emailEmpresa:req.body.emailEmpresa,
-      tipoJuridicoEmpresa:req.body.tipoJuridicoEmpresa
+    Pedido.create({
+      nome:req.body.nome,
+      corSacola:req.body.corSacola,
+      corTinta:req.body.corTinta,
+      quantidade:req.body.quantidade,
+      tamanho:req.body.tamanho,
+      tipo:req.body.tipo,
+      preco:req.body.preco,
+      empresaPedido:req.body.empresaPedido,
+      funcionarioPedido:req.body.funcionarioPedido,
     }).then(() => {
-      req.flash('success_msg','Empresa incluída com sucesso!')
-      res.redirect('/empresaroutes')
+      req.flash('success_msg','Pedido incluído com sucesso!')
+      res.redirect('/pedidoroutes')
     }).catch((err) => {
-      req.flash('erros_msg','Não foi possível incluir a empresa!')
+      req.flash('erros_msg','Não foi possível incluir o pedido!')
       console.log(err)
-      res.redirect('/empresaroutes')
+      res.redirect('/pedidoroutes')
     })
   }
 })
 //-------------------------------------------------------------------------------------------------
 router.get('/alteracaoroute/:id',isAuthenticaded,isFuncaoPedidos,(req,res) => {
-  Empresa.findOne({where:{id:req.params.id}}).then((empresas) => {    
-    res.render('empresaviews/alteracaoview',{empresas:empresas})
+  Pedido.findOne({where:{id:req.params.id}}).then((pedidos) => {    
+    res.render('pedidosviews/alteracaoview',{pedidos:pedidos})
   }).catch((err) => {
-    req.flash('erros_msg','Não foi possível encontrar o equipamento!')
+    req.flash('erros_msg','Não foi possível encontrar o pedido!')
     console.log(erro)
-    res.redirect('/empresaroutes')
+    res.redirect('/pedidoroutes')
   })
 })
 //-------------------------------------------------------------------------------------------------
 router.post('/alterarroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
   var erros = []
-  if (!req.body.nomeEmpresa || typeof req.body.nomeEmpresa == undefined || req.body.nomeEmpresa == null) {
-    erros.push({texto:'Nome da empresa inválido!'})
+  if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
+    erros.push({texto:'Nome do pedido inválido!'})
   }
-  if (!req.body.CNPJ || typeof req.body.CNPJ == undefined || req.body.CNPJ == null) {
-    erros.push({texto:'CNPJ inválido!'})
+  if (!req.body.corSacola || typeof req.body.corSacola == undefined || req.body.corSacola == null) {
+    erros.push({texto:'Cor da sacola inválida!'})
   }
-  if (!req.body.CEP || typeof req.body.CEP == undefined || req.body.CEP == null) {
-    erros.push({texto:'CEP inválido!'})
+  if (!req.body.corTinta || typeof req.body.corTinta == undefined || req.body.corTinta == null) {
+    erros.push({texto:'Cor da tinta inválida!'})
   }
-  if (!req.body.enderecoEmpresa || typeof req.body.enderecoEmpresa == undefined || req.body.enderecoEmpresa == null) {
-    erros.push({texto:'Endereço da empresa inválido!'})
+  if (!req.body.quantidade || typeof req.body.quantidade == undefined || req.body.quantidade == null) {
+    erros.push({texto:'Quantidade inválida!'})
   }
-  if (!req.body.telefoneEmpresa || typeof req.body.telefoneEmpresa == undefined || req.body.telefoneEmpresa == null) {
-    erros.push({texto:'Telefone da empresa inválido!'})
+  if (!req.body.tamanho || typeof req.body.tamanho == undefined || req.body.tamanho == null) {
+    erros.push({texto:'Tamanho inválido!'})
   }
-  if (!req.body.emailEmpresa || typeof req.body.emailEmpresa == undefined || req.body.emailEmpresa == null) {
-    erros.push({texto:'Email da empresa inválido!'})
+  if (!req.body.tipo || typeof req.body.tipo == undefined || req.body.tipo == null) {
+    erros.push({texto:'Tipo inválido!'})
   }
-  if (!req.body.tipoJuridicoEmpresa || typeof req.body.tipoJuridicoEmpresa == undefined || req.body.tipoJuridicoEmpresa == null) {
-    erros.push({texto:'Tipo jurídico da empresa inválido!'})
+  if (!req.body.preco || typeof req.body.preco == undefined || req.body.preco == null) {
+    erros.push({texto:'Preco inválido!'})
+  }
+  if (!req.body.empresaPedido || typeof req.body.empresaPedido == undefined || req.body.empresaPedido == null) {
+    erros.push({texto:'Empresa que fez o pedido inválida!'})
+  }
+  if (!req.body.funcionarioPedido || typeof req.body.funcionarioPedido == undefined || req.body.funcionarioPedido == null) {
+    erros.push({texto:'Funcionario que adicionou pedido inválido!'})
   }
   if (erros.length > 0) {
-    res.render('empresaviews/alteracaoview',{erros:erros})
+    res.render('pedidosviews/alteracaoview',{erros:erros})
   } else {
-    Empresa.findOne({where:{id:req.body.id}}).then((empresas) => {
-      empresas.nome = req.body.nome;
-      empresas.CNPJ = req.body.CNPJ;
-      empresas.CEP = req.body.CEP;
-      empresas.enderecoEmpresa = req.body.enderecoEmpresa;
-      empresas.telefoneEmpresa = req.body.telefoneEmpresa;
-      empresas.emailEmpresa = req.body.emailEmpresa;
-      empresas.tipoJuridicoEmpresa = req.body.tipoJuridicoEmpresa;
-      empresas.save().then(() => {
-        req.flash('success_msg','Empresa alterada com sucesso!')
-        res.redirect('/empresaroutes')
+    Pedido.findOne({where:{id:req.body.id}}).then((pedidos) => {
+      pedidos.nome = req.body.nome;
+      pedidos.corSacola = req.body.corSacola;
+      pedidos.corTinta = req.body.corTinta;
+      pedidos.quantidade = req.body.quantidade;
+      pedidos.tamanho = req.body.tamanho;
+      pedidos.tipo = req.body.tipo;
+      pedidos.preco = req.body.preco;
+      pedidos.empresaPedido = req.body.empresaPedido;
+      pedidos.funcionarioPedido = req.body.funcionarioPedido;
+      pedidos.save().then(() => {
+        req.flash('success_msg','Pedido alterado com sucesso!')
+        res.redirect('/pedidoroutes')
       }).catch((erro) => {
-        req.flash('error_msg','Não foi possível alterar a empresa!')
+        req.flash('error_msg','Não foi possível alterar o pedido!')
         console.log(erro)
-        res.redirect('/empresaroutes')
+        res.redirect('/pedidoroutes')
       })
     }).catch((erro) => {
-      req.flash('error_msg','Não foi possível encontrar o equipamento!')
+      req.flash('error_msg','Não foi possível encontrar o pedido!')
       console.log(erro)
-      res.redirect('/empresaroutes')
+      res.redirect('/pedidoroutes')
     })
   }
 })
 //-------------------------------------------------------------------------------------------------
 router.post('/excluirroute',isAuthenticaded,isFuncaoPedidos,(req,res) => {
-  Empresa.destroy({where:{id:req.body.id}}).then(() => {
-    req.flash('success_msg','Empresa aqruivada com sucesso!')
-    res.redirect('/empresaroutes')
+  Pedido.destroy({where:{id:req.body.id}}).then(() => {
+    req.flash('success_msg','Pedido arquivado com sucesso!')
+    res.redirect('/pedidoroutes')
   }).catch((erro) => {
-    req.flash('error_msg','Não foi possível arquivar a empresa!')
+    req.flash('error_msg','Não foi possível arquivar o pedido!')
     console.log(erro)
-    res.redirect('/empresaroutes')
+    res.redirect('/pedidoroutes')
   })
 })
 //-------------------------------------------------------------------------------------------------

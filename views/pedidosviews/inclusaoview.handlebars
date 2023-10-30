@@ -1,0 +1,76 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="box-header-equipamento mb-4">
+    <div class="card-body">
+        <h3>Adicionando pedido</h3>
+        <form action="/pedidoroutes/incluirroute" method="POST">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control">
+            <br>
+            <label for="corSacola">Cor da sacola:</label>
+            <input type="text" id="corSacola" name="corSacola" placeholder="Cor da sacola" class="form-control">
+            <br>
+            <label for="corTinta">Cor da tinta:</label>
+            <input type="text" id="corTinta" name="corTinta" placeholder="Cor da tinta" class="form-control">
+            <br>
+            <label for="quantidade">Quantidade:</label>
+            <input type="text" id="quantidade" name="quantidade" placeholder="Quantidade" class="form-control">
+            <br>
+            <label for="tamanho">Tamanho:</label>
+            <input type="text" id="tamanho" name="tamanho" placeholder="Tamanho" class="form-control">
+            <br>
+            <label for="tipo">Tipo:</label>
+            <select id="tipo" name="tipo" class="form-control">
+                <option value="plastico">Plastico</option>
+                <option value="pano">Pano</option>
+                <option value="algumacoisa">Alguma coisa</option>
+            </select>
+            <br>
+            <label for="preco">Preço:</label>
+            <input type="text" id="preco" name="preco" placeholder="Preço" class="form-control">
+            <br>
+            <label for="empresaPedido">Empresa que fez o pedido:</label>
+            <select id="empresaPedido" name="empresaPedido" class="form-control">
+                <script>
+                    function carregarEmpresas() {
+                        $.get('/pedidoroutes/obterempresas', function (empresas) {
+                            const selectEmpresa = $('#empresaPedido');
+                            selectEmpresa.empty();
+
+                            empresas.forEach(function (empresa) {
+                                selectEmpresa.append($('<option>', {
+                                    value: empresa.id,
+                                    text: empresa.nomeEmpresa,
+                                }));
+                            });
+                        });
+                    }
+                    carregarEmpresas();
+                </script>
+            </select>
+            <br>
+            <label for="funcionarioPedido">Funcionário que fez o pedido:</label>
+            <select id="funcionarioPedido" name="funcionarioPedido" class="form-control">
+                <script>
+                    function carregarFuncionarios() {
+                        $.get('/pedidoroutes/obterfuncionarios', function (usuarios) {
+                            const selectFuncionario = $('#funcionarioPedido');
+                            selectFuncionario.empty(); // Limpa as opções existentes
+
+                            usuarios.forEach(function (funcionario) {
+                                selectFuncionario.append($('<option>', {
+                                    value: funcionario.id,
+                                    text: funcionario.nome,
+                                }));
+                            });
+                        });
+                    }
+                    carregarFuncionarios();
+                </script>
+            </select>
+            <button type="submit" class="btn btn-success">Cadastrar</button>
+        </form>
+    </div>
+</div>
+{{#each erros}}
+<div class="alert alert-danger">{{texto}}</div>
+{{/each}}

@@ -1,1 +1,36 @@
-<h1>ola</h1>
+<div class="box-header-equipamento mb-4">
+  <h2>
+    Bem-vindo a seção de Pedidos!
+  </h2>
+  <a href="/pedidoroutes/exibirinclusaoroute"><button class="btn btn-success">Incluir pedido</button></a>
+</div>
+{{#each pedidos}}
+<div class="box-header-equipamento mb-4">
+  <div class="card-body">
+    <h4>{{nome}}</h4>
+    <small>Cor da sacola: {{corSacola}}</small>
+    <br>
+    <small>Cor da tinta: {{corTinta}}</small>
+    <br>
+    <small>Quantidade: {{quantidade}}</small>
+    <br>
+    <small>Tamanho: {{tamanho}}</small>
+    <br>
+        <small>Tipo: {{tipo}}</small>
+    <br>
+        <small>Preço: {{preco}}</small>
+    <br>
+        <small>Empresa que fez o pedido: {{empresaPedido.nomeEmpresa}}</small>
+    <br>
+            <small>Funcionário que fez o pedido: {{funcionarioPedido.nome}}</small>
+    <br>
+    <a href="/pedidoroutes/alteracaoroute/{{id}}"><button class="btn btn-success mt-4">Alterar Pedido</button></a>
+    <form action="/pedidoroutes/excluirroute" method="POST">
+      <input type="hidden" name="id" value="{{id}}">
+      <button type="submit" class="btn btn-danger mt-2">Arquivar Pedido</button>
+    </form>
+  </div>
+</div>
+{{else}}
+<h4 class="mt-3" id="nenhumEquipamentoh4">Nenhum pedido cadastrado!</h4>
+{{/each}}
