@@ -1,32 +1,38 @@
-<div class="box-header-equipamento">
-  <div class="card-body">
-    <h3>Alteração de funcionário</h3>
-    <form action="/usuarioroutes/alterarroute" method="POST">
-      <input type="hidden" name="id" value="{{usuarios.id}}">
-      <label for="nome">Nome:</label>
-      <input type="text" id="nome" name="nome" placeholder="Nome do funcionário" class="form-control" value="{{usuarios.nome}}">
-      <br>
-      <label for="telefone">Telefone:</label>
-      <input type="text" id="telefone" name="telefone" placeholder="Telefone do funcionário" class="form-control" value="{{usuarios.telefone}}">
-      <br>
-      <label for="email">Email:</label>
-      <input type="text" id="email" name="email" placeholder="Email do funcionário" class="form-control" value="{{usuarios.email}}">
-      <br>
-      <label for="senha">Senha:</label>
-      <input type="text" id="senha" name="senha" placeholder="Senha do funcionário" class="form-control" value="{{usuarios.senha}}">
-      <br>
-<label for="funcao">Função:</label>
-<select id="funcao" name="funcao" class="form-control">
-  <option value="Administrador" {{#if (eq usuarios.funcao "Administrador")}}selected{{/if}}>Administrador</option>
-  <option value="Empresa" {{#if (eq usuarios.funcao "Empresa")}}selected{{/if}}>Função Empresa</option>
-  <option value="Pedidos" {{#if (eq usuarios.funcao "Pedidos")}}selected{{/if}}>Função Pedidos</option>
-</select>
-
-      <button type="submit" class="btn btn-success">Alterar funcionário</button>
-    </form>
+<div class="container mt-4">
+  <div class="box-header-equipamento">
+    <div class="card-body">
+      <h3>Alteração de funcionário</h3>
+      <form action="/usuarioroutes/alterarroute" method="POST">
+        <input type="hidden" name="id" value="{{usuarios.id}}">
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input type="text" id="nome" name="nome" placeholder="Nome do funcionário" class="form-control" value="{{usuarios.nome}}">
+        </div>
+        <div class="form-group">
+          <label for="telefone">Telefone:</label>
+          <input type="text" id="telefone" name="telefone" placeholder="Telefone do funcionário" class="form-control" value="{{usuarios.telefone}}">
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="text" id="email" name "email" placeholder="Email do funcionário" class="form-control" value="{{usuarios.email}}">
+        </div>
+        <div class="form-group">
+          <label for="senha">Senha:</label>
+          <input type="text" id="senha" name="senha" placeholder="Senha do funcionário" class="form-control" value="{{usuarios.senha}}">
+        </div>
+        <div class="form-group">
+          <label for="funcao">Função:</label>
+          <select id="funcao" name="funcao" class="form-control">
+            <option value="Administrador" {{#if (eq usuarios.funcao "Administrador")}}selected{{/if}}>Administrador</option>
+            <option value="Empresa" {{#if (eq usuarios.funcao "Empresa")}}selected{{/if}}>Função Empresa</option>
+            <option value="Pedidos" {{#if (eq usuarios.funcao "Pedidos")}}selected{{/if}}>Função Pedidos</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success">Alterar funcionário</button>
+      </form>
+    </div>
   </div>
-</div>
 
-{{#each erros}}
-  <div class="alert alert-danger">{{texto}}</div>
-{{/each}}
+  {{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+  {{/each}}

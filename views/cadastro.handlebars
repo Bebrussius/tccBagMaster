@@ -1,30 +1,50 @@
-<div class="card" id="card-login">
-  <h1>CADASTRO</h1>
-  <div class="card-body">
-    <form action="/usuarioroutes/incluirroute" method="POST">
-      <label for="nome">Nome:</label>
-      <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control">
-      <br>
-      <label for="nome">Telefone:</label>
-      <input type="text" id="telefone" name="telefone" placeholder="Numero de telefone do usuário" class="form-control">
-      <br>
-      <label for="nome">E-mail:</label>
-      <input type="text" id="email" name="email" placeholder="E-mail do usuário" class="form-control">
-      <br>
-      <label for="nome">Senha:</label>
-      <input type="text" id="senha" name="senha" placeholder="Senha do usuário" class="form-control">
-      <br>
-      <label for="funcao">Função:</label>
-      <select id="funcao" name="funcao" class="form-control">
-        <option value="funcaoEmpresa">Função Empresa</option>
-        <option value="funcaoPedidos">Função Pedidos</option>
-      </select>
-      <br>
-      <button type="submit" class="btn btn-success">Cadastrar-se</button>
-    </form>
-  </div>
-</div>
 
-{{#each erros}}
-<div>{{texto}}</div>
-{{/each}}
+
+<body>
+  <div class="card mt-5" id="card-login">
+    <h1 class="text-center mt-2">Cadastro</h1>
+    <div class="card-body">
+      <form action="/usuarioroutes/incluirroute" method="POST">
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input type="text" style="background-color: #D5D5D5;"  id="nome" name="nome" placeholder="Nome do usuário" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="telefone">Telefone:</label>
+          <input type="text" style="background-color: #D5D5D5;"  id="telefone" name="telefone" placeholder="Número de telefone do usuário"
+            class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <input type="text"style="background-color: #D5D5D5;"  id="email" name="email" placeholder="E-mail do usuário" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="senha">Senha:</label>
+          <input type="text" style="background-color: #D5D5D5;" id="senha" name="senha" placeholder="Senha do usuário" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="funcao">Função:</label>
+          <select id="funcao" style="background-color: #D5D5D5;"  name="funcao" class="form-control">
+            <option value="funcaoEmpresa">Função Empresa</option>
+            <option value="funcaoPedidos">Função Pedidos</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success btn-block"
+          style="background-color: #020060; color: white;">Cadastrar-se</button>
+
+
+      </form>
+    </div>
+  </div>
+
+
+  {{#each erros}}
+  <div>{{texto}}</div>
+  {{/each}}
+</body>
+
+
+
+
+
+
