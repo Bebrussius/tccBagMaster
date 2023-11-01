@@ -1,0 +1,29 @@
+<div class="box-header-equipamento mb-4">
+  <div class="card-body">
+      <h3>Adicionando empresa - Pessoa física</h3>
+    <form action="/empresaroutes/incluirroute/concluir" method="POST">
+      <label for="nome">Nome da pessoa:</label>
+        <input type="text" id="nomePessoa" name="nomePessoa" placeholder="Nome da pessoa" class="form-control">
+        <br>
+      <label for="nome">Telefone de contato:</label>
+        <input type="text" id="telefonePessoa" name="telefonePessoa" placeholder="Telefone de contato" class="form-control">
+        <br>
+      <label for="nome">E-mail de contato:</label>
+        <input type="text" id="emailPessoa" name="emailPessoa" placeholder="E-mail de contato" class="form-control">
+        <br>
+      <label for="nome">CPF:</label>
+        <input type="text" id="CPF" name="CPF" placeholder="CPF" class="form-control">
+        <br>
+      <label for="nome" id="label-file">RG:</label>
+        <input type="text" id="RG" name="RG" placeholder="RG" class="form-control">
+        <br>
+      <label for="nome" id="label-file">Endereço:</label>
+        <input type="text" id="enderecoPessoa" name="enderecoPessoa" placeholder="Endereço da pessoa" class="form-control">
+        <br>             
+      <button type="submit" class="btn btn-success">Adicionar empresa</button>
+    </form>
+  </div>
+</div>
+{{#each erros}}
+  <div class="alert alert-danger">{{texto}}</div>
+{{/each}}
