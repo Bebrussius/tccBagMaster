@@ -1,9 +1,9 @@
 //-------------------------------------------------------------------------------------------------
 const express = require('express')
 const router = express.Router()
-const Pedido = require('../models/pedidosmodel')
-const Empresa = require('../models/empresamodel')
-const Usuario = require('../models/usuariomodel')
+const Pedido = require('../models/pedidosModel')
+const Empresa = require('../models/empresaModel')
+const Usuario = require('../models/usuarioModel')
 const { isAuthenticaded } = require("../helpers/isAuthenticated")
 const { isFuncaoPedidos } = require('../helpers/isFuncaoPedidos');
 //-------------------------------------------------------------------------------------------------

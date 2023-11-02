@@ -1,6 +1,6 @@
 const db = require("./db");
-const Empresa = require('../models/empresamodel')
-const Usuario = require('../models/usuariomodel')
+const Empresa = require('./empresaModel')
+const Usuario = require('./usuarioModel')
 
 const Pedido = db.sequelize.define('pedido', {
   nome: {
