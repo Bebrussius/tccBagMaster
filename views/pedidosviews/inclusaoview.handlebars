@@ -2,7 +2,7 @@
 <div class="box-header-equipamento mb-4">
     <div class="card-body">
         <h3>Adicionando pedido</h3>
-        <form action="/pedidoroutes/incluirroute/pedidos" method="POST">
+        <form action="/pedidoroutes/incluirroute/pedido" method="POST">
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control">
             <br>
@@ -25,49 +25,13 @@
                 <option value="algumacoisa">Alguma coisa</option>
             </select>
             <br>
-            <label for="preco">Preço:</label>
-            <input type="text" id="preco" name="preco" placeholder="Preço" class="form-control">
-            <br>
-            <label for="empresaPedido">Empresa que fez o pedido:</label>
-            <select id="empresaPedido" name="empresaPedido" class="form-control">
-                <script>
-                    function carregarEmpresas() {
-                        $.get('/pedidoroutes/obterempresas', function (empresas) {
-                            const selectEmpresa = $('#empresaPedido');
-                            selectEmpresa.empty();
-
-                            empresas.forEach(function (empresa) {
-                                selectEmpresa.append($('<option>', {
-                                    value: empresa.id,
-                                    text: empresa.nomeEmpresa,
-                                }));
-                            });
-                        });
-                    }
-                    carregarEmpresas();
-                </script>
+            <label for="impressao">Impressao:</label>
+            <select id="impressao" name="impressao" class="form-control">
+                <option value="Um lado">Um lado</option>
+                <option value="Dois lados">Dois lados</option>
             </select>
             <br>
-            <label for="funcionarioPedido">Funcionário que fez o pedido:</label>
-            <select id="funcionarioPedido" name="funcionarioPedido" class="form-control">
-                <script>
-                    function carregarFuncionarios() {
-                        $.get('/pedidoroutes/obterfuncionarios', function (usuarios) {
-                            const selectFuncionario = $('#funcionarioPedido');
-                            selectFuncionario.empty(); // Limpa as opções existentes
-
-                            usuarios.forEach(function (funcionario) {
-                                selectFuncionario.append($('<option>', {
-                                    value: funcionario.id,
-                                    text: funcionario.nome,
-                                }));
-                            });
-                        });
-                    }
-                    carregarFuncionarios();
-                </script>
-            </select>
-            <button type="submit" class="btn btn-success">Cadastrar</button>
+            <button type="submit" class="btn btn-success">Continuar</button>
         </form>
     </div>
 </div>

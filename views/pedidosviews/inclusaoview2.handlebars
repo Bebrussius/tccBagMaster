@@ -1,0 +1,55 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="box-header-equipamento mb-4">
+    <div class="card-body">
+        <h3>Adicionando pedido</h3>
+        <form action="/pedidoroutes/incluirroute/concluir" method="POST">
+            <label for="preco">Imagem:</label>       
+            <label for="preco">Preço:</label>
+            <input type="text" id="preco" name="preco" placeholder="Preço" class="form-control">
+            <br>
+            <label for="empresaPedido">Empresa que fez o pedido:</label>
+            <select id="empresaPedido" name="empresaPedido" class="form-control">
+                <script>
+                    function carregarEmpresas() {
+                        $.get('/pedidoroutes/obterempresas', function (empresas) {
+                            const selectEmpresa = $('#empresaPedido');
+                            selectEmpresa.empty();
+
+                            empresas.forEach(function (empresa) {
+                                selectEmpresa.append($('<option>', {
+                                    value: empresa.id,
+                                    text: empresa.nomeEmpresa,
+                                }));
+                            });
+                        });
+                    }
+                    carregarEmpresas();
+                </script>
+            </select>
+            <br>
+            <label for="funcionarioPedido">Funcionário que fez o pedido:</label>
+            <select id="funcionarioPedido" name="funcionarioPedido" class="form-control">
+                <script>
+                    function carregarFuncionarios() {
+                        $.get('/pedidoroutes/obterfuncionarios', function (usuarios) {
+                            const selectFuncionario = $('#funcionarioPedido');
+                            selectFuncionario.empty(); // Limpa as opções existentes
+
+                            usuarios.forEach(function (funcionario) {
+                                selectFuncionario.append($('<option>', {
+                                    value: funcionario.id,
+                                    text: funcionario.nome,
+                                }));
+                            });
+                        });
+                    }
+                    carregarFuncionarios();
+                </script>
+            </select>
+            <button type="submit" class="btn btn-success">Cadastrar</button>
+        </form>
+    </div>
+</div>
+{{#each erros}}
+<div class="alert alert-danger">{{texto}}</div>
+{{/each}}

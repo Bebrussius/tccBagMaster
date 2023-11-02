@@ -38,6 +38,10 @@ const Empresa = db.sequelize.define('empresa', {
     type:db.Sequelize.STRING,
     require:true
   },
+  emailPessoa:{
+    type:db.Sequelize.STRING,
+    require:true
+  },
   CPF:{
     type:db.Sequelize.STRING,
     require:true

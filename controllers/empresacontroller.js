@@ -93,7 +93,7 @@ router.post('/incluirroute/concluir', isAuthenticaded, isFuncaoEmpresas, (req, r
       ...dadosEmpresa,
       nomePessoa: req.body.nomePessoa,
       telefonePessoa: req.body.nomePessoa,
-      emailPessoa: req.body.CNPJ,
+      emailPessoa: req.body.emailPessoa,
       CPF: req.body.CPF,
       RG: req.body.RG,
       enderecoPessoa: req.body.enderecoPessoa
@@ -143,6 +143,24 @@ router.post('/alterarroute', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
   if (!req.body.tipoJuridicoEmpresa || typeof req.body.tipoJuridicoEmpresa == undefined || req.body.tipoJuridicoEmpresa == null) {
     erros.push({ texto: 'Tipo jurídico da empresa inválido!' })
   }
+  if (!req.body.nomePessoa || typeof req.body.nomePessoa == undefined || req.body.nomePessoa == null) {
+    erros.push({ texto: 'Nome da pessoa inválido!' })
+  }
+  if (!req.body.telefonePessoa || typeof req.body.telefonePessoa == undefined || req.body.telefonePessoa == null) {
+    erros.push({ texto: 'Telefone da pessoa inválido!' })
+  }
+  if (!req.body.emailPessoa || typeof req.body.emailPessoa == undefined || req.body.emailPessoa == null) {
+    erros.push({ texto: 'Email da pessoa inválido!' })
+  }
+  if (!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null) {
+    erros.push({ texto: 'CPF da pessoa inválido!' })
+  }
+  if (!req.body.RG || typeof req.body.RG == undefined || req.body.RG == null) {
+    erros.push({ texto: 'RG da pessoa inválido!' })
+  }
+  if (!req.body.enderecoPessoa || typeof req.body.enderecoPessoa == undefined || req.body.enderecoPessoa == null) {
+    erros.push({ texto: 'Endereco da pessoa inválido!' })
+  }
   if (erros.length > 0) {
     res.render('empresaviews/alteracaoview', { erros: erros })
   } else {
@@ -154,6 +172,12 @@ router.post('/alterarroute', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
       empresas.telefoneEmpresa = req.body.telefoneEmpresa;
       empresas.emailEmpresa = req.body.emailEmpresa;
       empresas.tipoJuridicoEmpresa = req.body.tipoJuridicoEmpresa;
+      empresas.nomePessoa = req.body.nomePessoa;
+      empresas.telefonePessoa = req.body.telefonePessoa;
+      empresas.emailPessoa = req.body.emailPessoa;
+      empresas.CPF = req.body.CPF;
+      empresas.RG = req.body.RG;
+      enderecoEmpresa = req.body.enderecoEmpresa;
       empresas.save().then(() => {
         req.flash('success_msg', 'Empresa alterada com sucesso!')
         res.redirect('/empresaroutes')
