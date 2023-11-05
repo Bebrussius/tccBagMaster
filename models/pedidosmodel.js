@@ -44,8 +44,8 @@ const Pedido = db.sequelize.define('pedido', {
   },
 });
 
-Pedido.belongsTo(Empresa, { foreignKey: 'empresaPedido' });
-Pedido.belongsTo(Usuario, { foreignKey: 'funcionarioPedido' });
+Pedido.belongsTo(Empresa, { as: 'empresa', foreignKey: 'empresaPedido' });
+Pedido.belongsTo(Usuario, { as: 'funcionario', foreignKey: 'funcionarioPedido' });
 
 Pedido.sync().then(() => {
   console.log('Tabela pedido criada com sucesso no MySql!');

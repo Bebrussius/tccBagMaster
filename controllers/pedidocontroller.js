@@ -9,8 +9,18 @@ const { isFuncaoPedidos } = require('../helpers/isFuncaoPedidos');
 //-------------------------------------------------------------------------------------------------
 router.get('/', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   Pedido.findAll({
-    include: [Empresa, Usuario],
+    include: [
+      {
+        model: Empresa,
+        as: 'empresa',
+      },
+      {
+        model: Usuario,
+        as: 'funcionario',
+      }
+    ]
   }).then((pedidos) => {
+    console.log(pedidos)
     res.render('pedidosviews/gerenciaview', { pedidos: pedidos });
   }).catch((erro) => {
     req.flash('erros_msg', 'Houve um erro ao listar os pedidos!');
