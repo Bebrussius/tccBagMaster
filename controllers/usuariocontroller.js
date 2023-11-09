@@ -97,7 +97,7 @@ router.post('/alterarroute',isAuthenticaded,(req,res) => {
     erros.push({texto:'Função inválida!'})
   }
   if (erros.length > 0) {
-    res.render('usuarioviews/alteracaoview',{erros:erros})
+    res.render('funcionariosviews/alteracaoview',{erros:erros})
   } else {
     Usuario.findOne({where:{id:req.body.id}}).then((usuarios) => {
       usuarios.nome = req.body.nome,
