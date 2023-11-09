@@ -1,32 +1,44 @@
-<div class="box-header-equipamento mb-4 ">
-  <div class="card-body" style="background-color: white">
-      <h3>Adicionando empresa</h3>
-    <form action="/empresaroutes/incluirroute/empresa" method="POST">
-      <label for="nome">Nome da empresa:</label>
-        <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da empresa" class="form-control">
-        <br>
-      <label for="nome">CNPJ:</label>
-        <input type="text" id="CNPJ" name="CNPJ" placeholder="CNPJ" class="form-control">
-        <br>
-      <label for="nome">CEP:</label>
-        <input type="text" id="CEP" name="CEP" placeholder="CEP" class="form-control">
-        <br>
-      <label for="nome">Endereço da empresa:</label>
-        <input type="text" id="enderecoEmpresa" name="enderecoEmpresa" placeholder="Endereço da empresa" class="form-control">
-        <br>
-      <label for="nome" id="label-file">Telefone:</label>
-        <input type="text" id="telefoneEmpresa" name="telefoneEmpresa" placeholder="Telefone de contato da empresa" class="form-control">
-        <br>
-      <label for="nome" id="label-file">Email:</label>
-        <input type="email" id="emailEmpresa" name="emailEmpresa" placeholder="Email de contato da empresa" class="form-control">
-        <br>  
-      <label for="nome" id="label-file">Tipo Jurídico:</label>
-        <input type="text" id="tipoJuridicoEmpresa" name="tipoJuridicoEmpresa" placeholder="Tipo jurídico da empresa" class="form-control">
-        <br>             
-      <button type="submit" class="btn btn-success">Continuar</button>
-    </form>
-  </div>
+<div class="box-header-equipamento mb-4">
+    <div class="card-body mt-5" style="background-color: white; text-align: center;">
+        <h3 class="mt-3">Adicionando empresa</h3>
+        <form action="/empresaroutes/incluirroute/empresa" method="POST" class="text-left">
+            
+            <div class="form-group">
+                <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da empresa" class=" mt-3 form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="CNPJ" name="CNPJ" placeholder="CNPJ" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="CEP" name="CEP" placeholder="CEP" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="enderecoEmpresa" name="enderecoEmpresa" placeholder="Endereço da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="telefoneEmpresa" name="telefoneEmpresa" placeholder="Telefone de contato da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="email" id="emailEmpresa" name="emailEmpresa" placeholder="Email de contato da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="tipoJuridicoEmpresa" name="tipoJuridicoEmpresa" placeholder="Tipo jurídico da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+            </div>
+            <div class="form-group">
+              <div class="text-center">
+                  <button type="submit" class="btn col-8 mx-auto" style="background-color: #020060; color: #ffffff;">Continuar</button>
+              </div>
+          
+            </div>
+        </form>
+    </div>
 </div>
 {{#each erros}}
-  <div class="alert alert-danger">{{texto}}</div>
+    <div class="alert alert-danger">{{texto}}</div>
 {{/each}}

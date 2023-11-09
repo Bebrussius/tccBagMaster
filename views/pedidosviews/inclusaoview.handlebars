@@ -1,37 +1,49 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="box-header-equipamento mb-4">
-    <div class="card-body" style="background-color: white;">
+    <div class="card-body" style="background-color: white; text-align: center;">
         <h3>Adicionando pedido</h3>
-        <form action="/pedidoroutes/incluirroute/pedido" method="POST">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control">
-            <br>
-            <label for="corSacola">Cor da sacola:</label>
-            <input type="text" id="corSacola" name="corSacola" placeholder="Cor da sacola" class="form-control">
-            <br>
-            <label for="corTinta">Cor da tinta:</label>
-            <input type="text" id="corTinta" name="corTinta" placeholder="Cor da tinta" class="form-control">
-            <br>
-            <label for="quantidade">Quantidade:</label>
-            <input type="text" id="quantidade" name="quantidade" placeholder="Quantidade" class="form-control">
-            <br>
-            <label for="tamanho">Tamanho:</label>
-            <input type="text" id="tamanho" name="tamanho" placeholder="Tamanho" class="form-control">
-            <br>
-            <label for="tipo">Tipo:</label>
-            <select id="tipo" name="tipo" class="form-control">
-                <option value="plastico">Plastico</option>
-                <option value="pano">Pano</option>
-                <option value="algumacoisa">Alguma coisa</option>
-            </select>
-            <br>
-            <label for="impressao">Impressao:</label>
-            <select id="impressao" name="impressao" class="form-control">
-                <option value="Um lado">Um lado</option>
-                <option value="Dois lados">Dois lados</option>
-            </select>
-            <br>
-            <button type="submit" class="btn btn-success">Continuar</button>
+        <form action="/pedidoroutes/incluirroute/pedido" method="POST" class="text-left">
+            
+            <div class="form-group">
+                <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control col-8 mx-auto"style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="corSacola" name="corSacola" placeholder="Cor da sacola" class="form-control col-8 mx-auto"style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="corTinta" name="corTinta" placeholder="Cor da tinta" class="form-control col-8 mx-auto"style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="quantidade" name="quantidade" placeholder="Quantidade" class="form-control col-8 mx-auto"style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <input type="text" id="tamanho" name="tamanho" placeholder="Tamanho" class="form-control col-8 mx-auto"style="background-color: #D5D5D5;">
+            </div>
+            
+            <div class="form-group">
+                <select id="tipo" name="tipo" class="form-control col-8 mx-auto"style="background-color: #D5D5D5;">
+                    <option value="plastico">Plastico</option>
+                    <option value="pano">Pano</option>
+                    <option value="algumacoisa">Alguma coisa</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <select id="impressao" name="impressao" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+                    <option value="Um lado">Um lado</option>
+                    <option value="Dois lados">Dois lados</option>
+                </select>
+            </div>
+            
+          <div class="form-group">
+                <div class="text-center"> 
+                    <button type="submit" class="btn col-8 mx-auto" style="background-color: #020060; color: #ffffff;">Continuar</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
