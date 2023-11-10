@@ -6,6 +6,6 @@ const client = require('twilio')(accountSid, authToken);
 
 client.messages.create({
   from: 'whatsapp:+14155238886',
-  body: 'Olá',
-  to: 'whatsapp:+555191378334',
+  body: 'Confecção da sacola concluída',
+  to: 'whatsapp:+555198862970',
 }).then(message => console.log(message.sid));
