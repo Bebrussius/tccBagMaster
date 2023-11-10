@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "whatsapp-web.js": "https://github.com/Julzk/whatsapp-web.js/tarball/jkr_hotfix_8"
   },
   "author": "Bernardo dos Santos Brussius, Nicolas Viçoza Morschel",
   "license": "ISC",
@@ -27,8 +28,13 @@
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "puppeteer-core": "^21.5.1",
+    "qrcode-terminal": "^0.12.0",
     "sequelize": "^6.32.1",
     "session": "^0.1.0",
-    "storage": "^0.2.0"
+    "storage": "^0.2.0",
+    "whatsapp-web.js": "^1.23.0"
   }
+
+  
 }
