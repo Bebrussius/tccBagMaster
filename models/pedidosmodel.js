@@ -42,6 +42,10 @@ const Pedido = db.sequelize.define('pedido', {
     type: db.Sequelize.STRING,
     allowNull: false
   },
+  estadoAtual: {
+    type: db.Sequelize.STRING,
+    defaultValue: "Em análise",
+  },
 });
 
 Pedido.belongsTo(Empresa, { as: 'empresa', foreignKey: 'empresaPedido' });
