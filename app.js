@@ -1,31 +1,35 @@
 //-------------------------------------------------------------------------------------------------
 
 // Módulos {{{
-const express = require('express')
-const handlebars = require('express-handlebars')
-const session = require('express-session')
-const flash = require('connect-flash')
-const bodyParser = require('body-parser')
-const path = require('path')
-const usuario = require('./controllers/usuariocontroller')
-const empresa = require('./controllers/empresacontroller')
-const pedido = require('./controllers/pedidocontroller')
-const passport = require('passport')
-const router = require('./controllers/usuariocontroller')
-const app = express()
-require("./config/auth")(passport)
-const multer = require('multer');
-const storage = multer.diskStorage({
-  destination: path.join(__dirname, 'public', 'uploads'),
-  filename: (req, file, cb) => {
-    const extrairNome = path.extname(file.originalname);
-    const filename = `${Date.now()}${extrairNome}`;
-    cb(null, filename);
-  }
-});
-const upload = multer({
-  storage: storage
-});
+  const express = require('express');
+  const session = require('express-session');
+  const flash = require('connect-flash');
+  const handlebars = require('express-handlebars');
+  const bodyParser = require('body-parser');
+  const path = require('path');
+  const usuario = require('./controllers/usuariocontroller');
+  const empresa = require('./controllers/empresacontroller');
+  const pedido = require('./controllers/pedidocontroller');
+  const passport = require('passport');
+  require('./config/auth')(passport);
+  
+  const app = express();
+  const qrcode = require('qrcode-terminal');
+  const { Client, LocalAuth } = require('whatsapp-web.js');
+  const client = new Client({ authStrategy: new LocalAuth() });
+  
+  client.on('qr', (qr) => {
+    qrcode.generate(qr, { small: true });
+  });
+  
+  client.on('ready', () => {
+    console.log('Client is ready!');
+  });
+  
+  client.initialize();
+  
+  // Pass the client instance to the pedido router
+  pedido.setClient(client);
 // }}}
 
 //-------------------------------------------------------------------------------------------------
@@ -111,7 +115,8 @@ app.get('/cadastro', (req, res) => {
 app.get('/login', (req, res) => {
   res.render('login')
 })
-//  
+// 
+
 app.use('/usuarioroutes', usuario), // prefixo para rotas de usuario
 app.use('/empresaroutes', empresa) // prefixo para rotas de equipamento
 app.use('/pedidoroutes', pedido)
@@ -125,9 +130,5 @@ app.listen(PORT, () => {
   console.log('Servidor rodando! Porta 3000')
 });
 //}}}
-
-//-------------------------------------------------------------------------------------------------
-
-
 
 //-------------------------------------------------------------------------------------------------

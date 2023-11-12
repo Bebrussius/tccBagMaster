@@ -1,12 +1,21 @@
 //-------------------------------------------------------------------------------------------------
 
+const client = require('../app')
+
 const express = require('express')
 const router = express.Router()
+let clientInstance = null; // Initialize the client instance
+
+router.setClient = function(client) {
+  clientInstance = client;
+};
+
 const Pedido = require('../models/pedidosModel')
 const Empresa = require('../models/empresaModel')
 const Usuario = require('../models/usuarioModel')
 const { isAuthenticaded } = require("../helpers/isAuthenticated")
 const { isFuncaoPedidos } = require('../helpers/isFuncaoPedidos');
+router.client = null;
 
 //-------------------------------------------------------------------------------------------------
 
@@ -140,7 +149,6 @@ router.post('/incluirroute/concluir', isAuthenticaded, isFuncaoPedidos, (req, re
 //-------------------------------------------------------------------------------------------------
 
 router.post('/atualizarestado/:id', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
-
   console.log('Rota de atualização de estado acessada');
 
   const { id } = req.params;
@@ -149,7 +157,14 @@ router.post('/atualizarestado/:id', isAuthenticaded, isFuncaoPedidos, async (req
   console.log('Dados recebidos:', req.body);
 
   try {
-    const pedido = await Pedido.findByPk(id);
+    const pedido = await Pedido.findByPk(id, {
+      include: [
+        {
+          model: Empresa,
+          as: 'empresa',
+        },
+      ],
+    });
 
     if (!pedido) {
       return res.status(404).json({ error: 'Pedido não encontrado' });
@@ -160,22 +175,53 @@ router.post('/atualizarestado/:id', isAuthenticaded, isFuncaoPedidos, async (req
     // Encontre o índice atual do estado do pedido
     const indiceAtual = estadosPossiveis.indexOf(pedido.estado);
 
-// Verifique se não é o último estado
-if (indiceAtual < estadosPossiveis.length - 1) {
-  // Avance para o próximo estado
-  pedido.estado = estadosPossiveis[indiceAtual + 1];
-  await pedido.save();
-  // Adicione aqui a lógica para enviar a mensagem no WhatsApp para o cliente.
-  return res.status(200).json({ success: true, message: 'Estado do pedido avançado com sucesso!' });
-} else {
-  // Se já estiver no último estado, retorne uma mensagem adequada.
-  return res.status(400).json({ success: false, error: 'O pedido já está no último estado.' });
-}
+    // Verifique se não é o último estado
+    if (indiceAtual < estadosPossiveis.length - 1) {
+      // Avance para o próximo estado
+      pedido.estado = estadosPossiveis[indiceAtual + 1];
+      await pedido.save();
+
+      // Enviar mensagem no WhatsApp
+      if (pedido.empresa && pedido.empresa.telefonePessoa) {
+        const clienteTelefone = pedido.empresa.telefonePessoa
+        const mensagem = `O estado do seu pedido foi atualizado para: ${pedido.estado}`;
+        enviarMensagemWhatsApp(client, clienteTelefone, mensagem);
+      } else {
+        console.error('Erro: Número de telefone da empresa não encontrado.');
+      }
+
+      return res.status(200).json({ success: true, message: 'Estado do pedido avançado com sucesso!' });
+    } else {
+      // Se já estiver no último estado, retorne uma mensagem adequada.
+      return res.status(400).json({ success: false, error: 'O pedido já está no último estado.' });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Erro ao avançar o estado do pedido' });
   }
 });
+
+// Função para enviar mensagem no WhatsApp
+function enviarMensagemWhatsApp(client, clienteTelefone, mensagem) {
+
+  console.log('Debug: Verificando client antes de enviar mensagem', client);
+  
+  if (clientInstance && clientInstance.sendMessage) {
+    let formattedNumber = clienteTelefone.startsWith('55') ? clienteTelefone : '55' + clienteTelefone;
+    formattedNumber = formattedNumber.replace(/\D/g, '');
+    formattedNumber = formattedNumber.replace(/^0+/, ''); 
+
+    const chatId = formattedNumber + '@c.us';
+
+    clientInstance.sendMessage(chatId, mensagem).then(() => {
+      console.log('Mensagem enviada com sucesso para', chatId);
+    }).catch((error) => {
+      console.error('Erro ao enviar mensagem para', chatId, error.message);
+    });
+  } else {
+    console.error('Erro: client não está definido ou não possui o método sendMessage');
+  }
+}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -263,4 +309,5 @@ router.post('/excluirroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
 
 //-------------------------------------------------------------------------------------------------
 module.exports = router
+
 //-------------------------------------------------------------------------------------------------

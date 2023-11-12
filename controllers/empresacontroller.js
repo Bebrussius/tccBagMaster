@@ -14,33 +14,6 @@ router.get('/', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
     res.redirect('/')
   })
 })
-
-
-
-
-
-
-
-//naaaao fuuuuuuunciooooonaaaaaaaa!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-router.get('/empresaDetalhesRoute/:id', (req, res) => {
-  // Recupere os detalhes da empresa com o ID fornecido
-  const empresa = req.empresa; // Isso depende de como você recupera os detalhes da empresa
- 
-  // Exiba a tela com os detalhes da empresa
-  res.render('empresaDetalhes', { empresa });
- });
-
-//naaaao fuuuuuuunciooooonaaaaaaaa!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
-
-
-
-
-
 //-------------------------------------------------------------------------------------------------
 router.get('/exibirinclusaoroute', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
   res.render('empresaviews/inclusaoview')
