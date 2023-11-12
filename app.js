@@ -52,6 +52,7 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next()
 })
+app.use(express.json());
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())

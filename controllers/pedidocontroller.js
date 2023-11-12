@@ -1,4 +1,5 @@
 //-------------------------------------------------------------------------------------------------
+
 const express = require('express')
 const router = express.Router()
 const Pedido = require('../models/pedidosModel')
@@ -6,7 +7,9 @@ const Empresa = require('../models/empresaModel')
 const Usuario = require('../models/usuarioModel')
 const { isAuthenticaded } = require("../helpers/isAuthenticated")
 const { isFuncaoPedidos } = require('../helpers/isFuncaoPedidos');
+
 //-------------------------------------------------------------------------------------------------
+
 router.get('/', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   Pedido.findAll({
     include: [
@@ -28,7 +31,9 @@ router.get('/', isAuthenticaded, isFuncaoPedidos, (req, res) => {
     res.redirect('/');
   });
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.get('/obterempresas', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   Empresa.findAll().then((empresas) => {
     res.json(empresas);
@@ -45,14 +50,18 @@ router.get('/obterfuncionarios', isAuthenticaded, isFuncaoPedidos, (req, res) =>
     res.status(500).json({ error: 'Erro ao buscar funcionários' });
   });
 });
+
 //-------------------------------------------------------------------------------------------------
+
 router.get('/exibirinclusaoroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   res.render('pedidosviews/inclusaoview')
 })
 router.get('/exibirinclusaoroute/parteDois', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   res.render('pedidosviews/inclusaoview2')
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.post('/incluirroute/pedido', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   var erros = []
   if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -127,7 +136,49 @@ router.post('/incluirroute/concluir', isAuthenticaded, isFuncaoPedidos, (req, re
     });
   }
 })
+
 //-------------------------------------------------------------------------------------------------
+
+router.post('/atualizarestado/:id', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
+
+  console.log('Rota de atualização de estado acessada');
+
+  const { id } = req.params;
+
+  console.log('Pedido ID:', id);
+  console.log('Dados recebidos:', req.body);
+
+  try {
+    const pedido = await Pedido.findByPk(id);
+
+    if (!pedido) {
+      return res.status(404).json({ error: 'Pedido não encontrado' });
+    }
+
+    const estadosPossiveis = ['Recebimento do pedido', 'Arte feita', 'Materiais recebidos', 'Confecção das sacolas em produção', 'Confecção das sacolas concluídas', 'Em trânsito', 'Pagamento feito'];
+
+    // Encontre o índice atual do estado do pedido
+    const indiceAtual = estadosPossiveis.indexOf(pedido.estado);
+
+// Verifique se não é o último estado
+if (indiceAtual < estadosPossiveis.length - 1) {
+  // Avance para o próximo estado
+  pedido.estado = estadosPossiveis[indiceAtual + 1];
+  await pedido.save();
+  // Adicione aqui a lógica para enviar a mensagem no WhatsApp para o cliente.
+  return res.status(200).json({ success: true, message: 'Estado do pedido avançado com sucesso!' });
+} else {
+  // Se já estiver no último estado, retorne uma mensagem adequada.
+  return res.status(400).json({ success: false, error: 'O pedido já está no último estado.' });
+}
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Erro ao avançar o estado do pedido' });
+  }
+});
+
+//-------------------------------------------------------------------------------------------------
+
 router.get('/alteracaoroute/:id', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   Pedido.findOne({ where: { id: req.params.id } }).then((pedidos) => {
     res.render('pedidosviews/alteracaoview', { pedidos: pedidos })
@@ -137,6 +188,7 @@ router.get('/alteracaoroute/:id', isAuthenticaded, isFuncaoPedidos, (req, res) =
     res.redirect('/pedidoroutes')
   })
 })
+
 //-------------------------------------------------------------------------------------------------
 router.post('/alterarroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   var erros = []
@@ -195,7 +247,9 @@ router.post('/alterarroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
     })
   }
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.post('/excluirroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
   Pedido.destroy({ where: { id: req.body.id } }).then(() => {
     req.flash('success_msg', 'Pedido arquivado com sucesso!')
@@ -206,6 +260,7 @@ router.post('/excluirroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
     res.redirect('/pedidoroutes')
   })
 })
+
 //-------------------------------------------------------------------------------------------------
 module.exports = router
 //-------------------------------------------------------------------------------------------------

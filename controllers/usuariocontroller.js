@@ -1,4 +1,5 @@
 //-------------------------------------------------------------------------------------------------
+
 const express = require('express')
 const router = express.Router()
 const Usuario = require('../models/usuarioModel')
@@ -7,7 +8,9 @@ const { hash } = require('bcryptjs')
 const passport = require('passport')
 const {isAuthenticaded} = require("../helpers/isAuthenticated")
 const {isFuncaoAdministrador} = require("../helpers/isFuncaoAdministrador")
+
 //-------------------------------------------------------------------------------------------------
+
 router.get('/', isAuthenticaded,isFuncaoAdministrador,(req, res) => {
   Usuario.findAll({
     order: [['createdAt', 'DESC']] // Isso classificará por data de criação decrescente (mais recente primeiro)
@@ -19,11 +22,15 @@ router.get('/', isAuthenticaded,isFuncaoAdministrador,(req, res) => {
     res.redirect('/');
   });
 });
+
 //-------------------------------------------------------------------------------------------------
+
 router.get('/exibirinclusaoroute',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
   res.render('funcionariosviews/inclusaoview')
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.post('/incluirroute',(req,res) => {
   var erros = []
   if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -68,7 +75,9 @@ router.post('/incluirroute',(req,res) => {
     });
   }
 });
+
 //-------------------------------------------------------------------------------------------------
+
 router.get('/alteracaoroute/:id',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
   Usuario.findOne({where:{id:req.params.id}}).then((usuarios) => {    
     res.render('funcionariosviews/alteracaoview',{usuarios:usuarios})
@@ -78,7 +87,9 @@ router.get('/alteracaoroute/:id',isAuthenticaded,isFuncaoAdministrador,(req,res)
     res.redirect('/usuarioroutes')
   })
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.post('/alterarroute',isAuthenticaded,(req,res) => {
   var erros = []
   if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
@@ -120,7 +131,9 @@ router.post('/alterarroute',isAuthenticaded,(req,res) => {
     })
   }
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.post('/excluirroute',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
   Usuario.destroy({where:{id:req.body.id}}).then(() => {
     req.flash('success_msg','Funcionário aqruivada com sucesso!')
@@ -131,7 +144,9 @@ router.post('/excluirroute',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
     res.redirect('/usuarioroutes')
   })
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.post('/login', (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",
@@ -139,13 +154,16 @@ router.post('/login', (req, res, next) => {
     failureFlash: true
   })(req, res, next)
 })
+
 //-------------------------------------------------------------------------------------------------
+
 router.get('/logout', (req, res, next) => {
   req.logout(function(err) {
       if (err) { return next(err) }
       res.redirect('/')
     })
 })
+
 //-------------------------------------------------------------------------------------------------
 module.exports = router
 //-------------------------------------------------------------------------------------------------

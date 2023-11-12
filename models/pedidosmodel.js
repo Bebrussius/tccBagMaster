@@ -42,9 +42,13 @@ const Pedido = db.sequelize.define('pedido', {
     type: db.Sequelize.STRING,
     allowNull: false
   },
-  estadoAtual: {
+  estado: {
     type: db.Sequelize.STRING,
-    defaultValue: "Em análise",
+    allowNull: false,
+    defaultValue: 'Recebimento do pedido',
+    validate: {
+      isIn: [['Recebimento do pedido', 'Arte feita', 'Materiais recebidos', 'Confecção das sacolas em produção', 'Confecção das sacolas concluídas', 'Em trânsito', 'Pagamento feito']],
+    },
   },
 });
 
