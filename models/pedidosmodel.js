@@ -50,6 +50,11 @@ const Pedido = db.sequelize.define('pedido', {
       isIn: [['Recebimento do pedido', 'Arte feita', 'Materiais recebidos', 'Confecção das sacolas em produção', 'Confecção das sacolas concluídas', 'Em trânsito', 'Pagamento feito']],
     },
   },
+  status: {
+    type: db.Sequelize.STRING,
+    allowNull: false,
+    defaultValue: 'em andamento',
+  },
 });
 
 Pedido.belongsTo(Empresa, { as: 'empresa', foreignKey: 'empresaPedido' });

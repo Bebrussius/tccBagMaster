@@ -1,0 +1,39 @@
+
+<div class="box-header-equipamento mb-4">
+   <div class="card-body">
+      <h4>{{empresa.nomeEmpresa}}</h4>
+      <small>CNPJ: {{empresa.CNPJ}}</small>
+      <br>
+      <small>CEP: {{empresa.CEP}}</small>
+      <br>
+      <small>Endereço da empresa: {{empresa.enderecoEmpresa}}</small>
+      <br>
+      <small>Telefone da empresa: {{empresa.telefoneEmpresa}}</small>
+      <br>
+      <small>Email da empresa: {{empresa.emailEmpresa}}</small>
+      <br>
+      <small>Tipo juridico da empresa: {{empresa.tipoJuridicoEmpresa}}</small>
+      <br>
+      <small>Nome pessoa: {{empresa.nomePessoa}}</small>
+      <br>
+      <small>Telefone pessoa: {{empresa.telefonePessoa}}</small>
+      <br>
+      <small>CPF: {{empresa.CPF}}</small>
+      <br>
+      <small>RG: {{empresa.RG}}</small>
+      <br>
+      <small>Endereço pessoa: {{empresa.enderecoPessoa}}</small>
+      <br>
+      <a href="/empresaroutes/alteracaoroute/{{empresa.id}}"><button class="btn btn-success mt-4">Alterar
+            Pedido</button></a>
+      <br>
+      <form action="/empresaroutes/togglestatusroute" method="POST">
+         <input type="hidden" name="id" value="{{empresa.id}}">
+         {{#if (eq empresa.status 'ativo')}}
+         <button type="submit" class="btn btn-danger mt-2">Desativar Empresa</button>
+         {{else}}
+         <button type="submit" class="btn btn-primary mt-2">Ativar Empresa</button>
+         {{/if}}
+      </form>
+   </div>
+</div>

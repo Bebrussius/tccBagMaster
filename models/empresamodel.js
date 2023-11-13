@@ -11,7 +11,7 @@ const Empresa = db.sequelize.define('empresa', {
     require: true
   },
   CEP: {
-    type: db.Sequelize.INTEGER,
+    type: db.Sequelize.STRING,
     require: true
   },
   enderecoEmpresa: {
@@ -53,7 +53,12 @@ const Empresa = db.sequelize.define('empresa', {
   enderecoPessoa:{
     type:db.Sequelize.STRING,
     require:true
-  }
+  },
+  status: {
+    type: db.Sequelize.STRING,
+    allowNull: false,
+    defaultValue: 'ativo',
+  },
 })
 //-------------------------------------------------------------------------------------------------
 Empresa.sync().then(() => {

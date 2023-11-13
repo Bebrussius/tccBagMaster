@@ -1,42 +1,86 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="box-header-equipamento">
     <div class="card-body" style="background-color: white;">
-        <h3>Alteração de funcionário</h3>
+        <h3>Alteração de pedido</h3>
         <form action="/pedidoroutes/alterarroute" method="POST">
             <input type="hidden" name="id" value="{{pedidos.id}}">
             <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control" value="{{pedidos.nome}}">
+            <input type="text" id="nome" name="nome" placeholder="Nome do usuário" class="form-control"
+                value="{{pedidos.nome}}">
             <br>
             <label for="corSacola">Cor da sacola:</label>
-            <input type="text" id="corSacola" name="corSacola" placeholder="Cor da sacola" class="form-control" value="{{pedidos.corSacola}}">
+            <input type="text" id="corSacola" name="corSacola" placeholder="Cor da sacola" class="form-control"
+                value="{{pedidos.corSacola}}">
             <br>
             <label for="corTinta">Cor da tinta:</label>
-            <input type="text" id="corTinta" name="corTinta" placeholder="Cor da tinta" class="form-control" value="{{pedidos.corTinta}}">
+            <input type="text" id="corTinta" name="corTinta" placeholder="Cor da tinta" class="form-control"
+                value="{{pedidos.corTinta}}">
             <br>
             <label for="quantidade">Quantidade:</label>
-            <input type="text" id="quantidade" name="quantidade" placeholder="Quantidade" class="form-control" value="{{pedidos.quantidade}}">
+            <input type="text" id="quantidade" name="quantidade" placeholder="Quantidade" class="form-control"
+                value="{{pedidos.quantidade}}">
             <br>
             <label for="tamanho">Tamanho:</label>
-            <input type="text" id="tamanho" name="tamanho" placeholder="Tamanho" class="form-control" value="{{pedidos.tamanho}}">
+            <input type="text" id="tamanho" name="tamanho" placeholder="Tamanho" class="form-control"
+                value="{{pedidos.tamanho}}">
             <br>
             <label for="tipo">Tipo:</label>
             <select id="tipo" name="tipo" class="form-control">
                 <option value="plastico" {{#if (eq pedidos.tipo "plastico" )}}selected{{/if}}>Plastico
                 </option>
                 <option value="pano" {{#if (eq pedidos.tipo "pano" )}}selected{{/if}}>Pano</option>
-                <option value="algumacoisa" {{#if (eq pedidos.tipo "algumacoisa" )}}selected{{/if}}>Alguma coisa</option>
+                <option value="algumacoisa" {{#if (eq pedidos.tipo "algumacoisa" )}}selected{{/if}}>Alguma coisa
+                </option>
             </select>
             <br>
             <label for="preco">Preço:</label>
-            <input type="text" id="preco" name="preco" placeholder="Preço" class="form-control" value="{{pedidos.preco}}">
+            <input type="text" id="preco" name="preco" placeholder="Preço" class="form-control"
+                value="{{pedidos.preco}}">
             <br>
-            <label for="empresaPedido">Empresa que fez o pedido:</label>
-            <input type="text" id="empresaPedido" name="empresaPedido" placeholder="Empresa que fez o pedido"
-                class="form-control" value="{{pedidos.empresaPedido}}">
-            <br>
-            <label for="funcionarioPedido">Funcioario que fez o pedido:</label>
-            <input type="text" id="funcionarioPedido" name="funcionarioPedido"
-                placeholder="Funcionario que fez o pedido" class="form-control" value="{{pedidos.funcionarioPedido}}">
-            <br>
+            <div class="form-group">
+                <label for="empresaPedido">Empresa que fez o pedido:</label>
+                <select id="empresaPedido" name="empresaPedido" class="form-control w-100 mx-auto"
+                    style="background-color: #D5D5D5;">
+                    <script>
+                        function carregarEmpresas() {
+                            $.get('/pedidoroutes/obterempresas', function (empresas) {
+                                const selectEmpresa = $('#empresaPedido');
+                                selectEmpresa.empty();
+
+                                empresas.forEach(function (empresa) {
+                                    selectEmpresa.append($('<option>', {
+                                        value: empresa.id,
+                                        text: empresa.nomeEmpresa,
+                                    }));
+                                });
+                            });
+                        }
+                        carregarEmpresas();
+                    </script>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="funcionarioPedido">Funcionário que fez o pedido:</label>
+                <select id="funcionarioPedido" name="funcionarioPedido" class="form-control w-100 mx-auto"
+                    style="background-color: #D5D5D5;">
+                    <script>
+                        function carregarFuncionarios() {
+                            $.get('/pedidoroutes/obterfuncionarios', function (usuarios) {
+                                const selectFuncionario = $('#funcionarioPedido');
+                                selectFuncionario.empty();
+
+                                usuarios.forEach(function (funcionario) {
+                                    selectFuncionario.append($('<option>', {
+                                        value: funcionario.id,
+                                        text: funcionario.nome,
+                                    }));
+                                });
+                            });
+                        }
+                        carregarFuncionarios();
+                    </script>
+                </select>
+            </div>
             <button type="submit" class="btn btn-success">Alterar funcionário</button>
         </form>
     </div>

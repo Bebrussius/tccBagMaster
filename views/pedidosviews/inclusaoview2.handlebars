@@ -12,7 +12,8 @@
                     </div>
                     <div class="form-group">
                         <label for="empresaPedido">Empresa que fez o pedido:</label>
-                        <select id="empresaPedido" name="empresaPedido" class="form-control w-100 mx-auto" style="background-color: #D5D5D5;">
+                        <select id="empresaPedido" name="empresaPedido" class="form-control w-100 mx-auto"
+                            style="background-color: #D5D5D5;">
                             <script>
                                 function carregarEmpresas() {
                                     $.get('/pedidoroutes/obterempresas', function (empresas) {
@@ -20,10 +21,12 @@
                                         selectEmpresa.empty();
 
                                         empresas.forEach(function (empresa) {
-                                            selectEmpresa.append($('<option>', {
-                                                value: empresa.id,
-                                                text: empresa.nomeEmpresa,
-                                            }));
+                                            if (empresa.status === 'ativo') {
+                                                selectEmpresa.append($('<option>', {
+                                                    value: empresa.id,
+                                                    text: empresa.nomeEmpresa,
+                                                }));
+                                            }
                                         });
                                     });
                                 }
@@ -33,18 +36,22 @@
                     </div>
                     <div class="form-group">
                         <label for="funcionarioPedido">Funcionário que fez o pedido:</label>
-                        <select id="funcionarioPedido" name="funcionarioPedido" class="form-control w-100 mx-auto" style="background-color: #D5D5D5;">
+                        <select id="funcionarioPedido" name="funcionarioPedido" class="form-control w-100 mx-auto"
+                            style="background-color: #D5D5D5;">
                             <script>
                                 function carregarFuncionarios() {
                                     $.get('/pedidoroutes/obterfuncionarios', function (usuarios) {
                                         const selectFuncionario = $('#funcionarioPedido');
-                                        selectFuncionario.empty(); // Limpa as opções existentes
+                                        selectFuncionario.empty();
 
                                         usuarios.forEach(function (funcionario) {
-                                            selectFuncionario.append($('<option>', {
-                                                value: funcionario.id,
-                                                text: funcionario.nome,
-                                            }));
+                                            // Verifica se a função é 'pedidos' ou 'administrador'
+                                            if (funcionario.funcao === 'Pedidos' || funcionario.funcao === 'Administrador') {
+                                                selectFuncionario.append($('<option>', {
+                                                    value: funcionario.id,
+                                                    text: funcionario.nome,
+                                                }));
+                                            }
                                         });
                                     });
                                 }
@@ -55,7 +62,7 @@
                     <div class="form-group">
                         <div class="text-center">
                             <button type="submit" class="btn w-100 mx-auto"
-                                style="background-color: #020060; color: #ffffff;">Cadastrar</button>
+                                style="background-color: #020060; color: #ffffff;">Adicionar pedido</button>
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ const express = require('express')
 const router = express.Router()
 let clientInstance = null; // Initialize the client instance
 
-router.setClient = function(client) {
+router.setClient = function (client) {
   clientInstance = client;
 };
 
@@ -20,6 +20,14 @@ router.client = null;
 //-------------------------------------------------------------------------------------------------
 
 router.get('/', isAuthenticaded, isFuncaoPedidos, (req, res) => {
+  let whereCondition = {
+    status: 'em andamento',
+  };
+
+  if (req.query.showDesativadas) {
+    whereCondition = {};
+  }
+
   Pedido.findAll({
     include: [
       {
@@ -30,17 +38,52 @@ router.get('/', isAuthenticaded, isFuncaoPedidos, (req, res) => {
         model: Usuario,
         as: 'funcionario',
       }
-    ]
-  }).then((pedidos) => {
-    console.log(pedidos)
-    res.render('pedidosviews/gerenciaview', { pedidos: pedidos });
-  }).catch((erro) => {
-    req.flash('erros_msg', 'Houve um erro ao listar os pedidos!');
-    console.log(erro);
-    res.redirect('/');
-  });
-})
+    ],
+    where: whereCondition,
+  })
+    .then((pedidos) => {
+      res.render('pedidosviews/gerenciaview', {
+        pedidos: pedidos,
+        showDesativadas: req.query.showDesativadas ? true : false,
+      });
+    })
+    .catch((erro) => {
+      req.flash('erros_msg', 'Houve um erro ao listar pedidos!');
+      console.log(erro);
+      res.redirect('/');
+    });
+});
+//-------------------------------------------------------------------------------------------------
 
+router.get('/pedidoDetalhesRoute/:id', isAuthenticaded, isFuncaoPedidos, (req, res) => {
+  const companyId = req.params.id;
+
+  Pedido.findByPk(companyId, {
+    include: [
+      {
+        model: Empresa,
+        as: 'empresa',
+      },
+      {
+        model: Usuario,
+        as: 'funcionario',
+      },
+    ],
+  })
+    .then((pedido) => {
+      if (!pedido) {
+        req.flash('error_msg', 'Pedido não encontrado!');
+        res.redirect('/pedidoroutes');
+      } else {
+        res.render('pedidosviews/detalhesview', { pedido: pedido });
+      }
+    })
+    .catch((err) => {
+      req.flash('error_msg', 'Erro ao pegar detalhes do pedido!');
+      console.log(err);
+      res.redirect('/pedidoroutes');
+    });
+});
 //-------------------------------------------------------------------------------------------------
 
 router.get('/obterempresas', isAuthenticaded, isFuncaoPedidos, (req, res) => {
@@ -205,11 +248,11 @@ router.post('/atualizarestado/:id', isAuthenticaded, isFuncaoPedidos, async (req
 function enviarMensagemWhatsApp(client, clienteTelefone, mensagem) {
 
   console.log('Debug: Verificando client antes de enviar mensagem', client);
-  
+
   if (clientInstance && clientInstance.sendMessage) {
     let formattedNumber = clienteTelefone.startsWith('55') ? clienteTelefone : '55' + clienteTelefone;
     formattedNumber = formattedNumber.replace(/\D/g, '');
-    formattedNumber = formattedNumber.replace(/^0+/, ''); 
+    formattedNumber = formattedNumber.replace(/^0+/, '');
 
     const chatId = formattedNumber + '@c.us';
 
@@ -296,16 +339,30 @@ router.post('/alterarroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
 
 //-------------------------------------------------------------------------------------------------
 
-router.post('/excluirroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
-  Pedido.destroy({ where: { id: req.body.id } }).then(() => {
-    req.flash('success_msg', 'Pedido arquivado com sucesso!')
-    res.redirect('/pedidoroutes')
-  }).catch((erro) => {
-    req.flash('error_msg', 'Não foi possível arquivar o pedido!')
-    console.log(erro)
-    res.redirect('/pedidoroutes')
-  })
-})
+router.post('/togglestatusroute', isAuthenticaded, isFuncaoPedidos, (req, res) => {
+  const companyId = req.body.id;
+
+  Pedido.findByPk(companyId)
+    .then((pedido) => {
+      if (!pedido) {
+        throw new Error('Pedido não encontrado');
+      }
+
+      // Alternar entre 'Em andamento' e 'Concluído'
+      pedido.status = pedido.status === 'em andamento' ? 'desativado' : 'em andamento';
+
+      return pedido.save();
+    })
+    .then(() => {
+      req.flash('success_msg', 'Status do pedido alterado com sucesso!');
+      res.redirect('/pedidoroutes');
+    })
+    .catch((erro) => {
+      req.flash('error_msg', 'Não foi possível alterar o status do pedido!');
+      console.log(erro);
+      res.redirect('/pedidoroutes');
+    });
+});
 
 //-------------------------------------------------------------------------------------------------
 module.exports = router

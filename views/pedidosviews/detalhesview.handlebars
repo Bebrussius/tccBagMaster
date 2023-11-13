@@ -1,0 +1,59 @@
+<div class="box-header-equipamento mb-4">
+  <div class="card-body">
+    <h4>{{pedido.nome}}</h4>
+    <small>Cor da sacola: {{pedido.corSacola}}</small>
+    <br>
+    <small>Cor da tinta: {{pedido.corTinta}}</small>
+    <br>
+    <small>Quantidade: {{pedido.quantidade}}</small>
+    <br>
+    <small>Tamanho: {{pedido.tamanho}}</small>
+    <br>
+    <small>Tipo: {{pedido.tipo}}</small>
+    <br>
+    <small>Preço: {{pedido.preco}}</small>
+    <br>
+    <small>Empresa que fez o pedido: {{pedido.empresa.nomeEmpresa}}</small>
+    <br>
+    <small>Funcionário que fez o pedido: {{pedido.funcionario.nome}}</small>
+    <br>
+    <small>Estado Atual: <span id="estado{{id}}">{{pedido.estado}}</span></small>
+    <br>
+    <a href="/pedidoroutes/alteracaoroute/{{pedido.id}}"><button class="btn btn-success mt-4">Alterar Pedido</button></a>
+    <form action="/pedidoroutes/togglestatusroute" method="POST">
+      <input type="hidden" name="id" value="{{pedido.id}}">
+      {{#if (eq pedido.status 'em andamento')}}
+      <button type="submit" class="btn btn-danger mt-2">Concluir pedido</button>
+      {{else}}
+      <button type="submit" class="btn btn-primary mt-2">Colocar pedido em andamento</button>
+      {{/if}}
+    </form>
+    <button class="btn btn-warning mt-2" onclick="atualizarEstado('{{pedido.id}}')">Próximo Estado</button>
+  </div>
+</div>
+<script>
+function atualizarEstado(pedidoId) {
+  console.log('Função atualizarEstado chamada');
+  fetch(`/pedidoroutes/atualizarestado/${pedidoId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    console.log('Resposta do servidor:', data);
+    if (data.success) {
+      console.log('Estado atualizado com sucesso');
+      // Reload the page after successful state update
+      window.location.reload(true);
+    } else {
+      console.log('Erro ao atualizar o estado');
+    }
+  })
+  .catch((error) => {
+    console.error('Erro na requisição:', error);
+    alert('Erro na requisição. Verifique o console para mais detalhes.');
+  });
+}
+</script>
