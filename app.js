@@ -10,6 +10,7 @@
   const usuario = require('./controllers/usuariocontroller');
   const empresa = require('./controllers/empresacontroller');
   const pedido = require('./controllers/pedidocontroller');
+  require("./models/usuarioModel");
   const passport = require('passport');
   require('./config/auth')(passport);
   const app = express();
