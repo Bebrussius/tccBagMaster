@@ -1,39 +1,47 @@
-
-<div class="box-header-equipamento mb-4">
-   <div class="card-body">
-      <h4>{{empresa.nomeEmpresa}}</h4>
-      <small>CNPJ: {{empresa.CNPJ}}</small>
-      <br>
-      <small>CEP: {{empresa.CEP}}</small>
-      <br>
-      <small>Endereço da empresa: {{empresa.enderecoEmpresa}}</small>
-      <br>
-      <small>Telefone da empresa: {{empresa.telefoneEmpresa}}</small>
-      <br>
-      <small>Email da empresa: {{empresa.emailEmpresa}}</small>
-      <br>
-      <small>Tipo juridico da empresa: {{empresa.tipoJuridicoEmpresa}}</small>
-      <br>
-      <small>Nome pessoa: {{empresa.nomePessoa}}</small>
-      <br>
-      <small>Telefone pessoa: {{empresa.telefonePessoa}}</small>
-      <br>
-      <small>CPF: {{empresa.CPF}}</small>
-      <br>
-      <small>RG: {{empresa.RG}}</small>
-      <br>
-      <small>Endereço pessoa: {{empresa.enderecoPessoa}}</small>
-      <br>
-      <a href="/empresaroutes/alteracaoroute/{{empresa.id}}"><button class="btn btn-success mt-4">Alterar
-            Pedido</button></a>
-      <br>
-      <form action="/empresaroutes/togglestatusroute" method="POST">
-         <input type="hidden" name="id" value="{{empresa.id}}">
-         {{#if (eq empresa.status 'ativo')}}
-         <button type="submit" class="btn btn-danger mt-2">Desativar Empresa</button>
-         {{else}}
-         <button type="submit" class="btn btn-primary mt-2">Ativar Empresa</button>
-         {{/if}}
-      </form>
+<div class="container mt-5">
+   <div class="row justify-content-center">
+      <div class="col-md-8">
+         <div class="card">
+            <div class="card-body">
+               <a href="#" class="text-secondary" onclick="history.back()">
+                  <span aria-hidden="true">&larr;</span> Voltar
+               </a>
+               <h4 class="card-title text-center">{{empresa.nomeEmpresa}}</h4>
+               <hr>
+               <div class="person-section ">
+                  <ul class="list-group list-group-flush">
+                     <li class="list-group-item list-group-item-action"><strong>Nome da pessoa:</strong> {{empresa.nomePessoa}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>Telefone da pessoa:</strong> {{empresa.telefonePessoa}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>CPF:</strong> {{empresa.CPF}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>RG:</strong> {{empresa.RG}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>Endereço da pessoa:</strong> {{empresa.enderecoPessoa}}</li>
+                  </ul>
+               </div>
+               <hr>
+               <div class="company-section">
+                  <ul class="list-group list-group-flush">
+                     <li class="list-group-item list-group-item-action"><strong>CNPJ:</strong> {{empresa.CNPJ}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>CEP:</strong> {{empresa.CEP}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>Endereço da empresa:</strong> {{empresa.enderecoEmpresa}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>Telefone da empresa:</strong> {{empresa.telefoneEmpresa}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>Email da empresa:</strong> {{empresa.emailEmpresa}}</li>
+                     <li class="list-group-item list-group-item-action"><strong>Tipo jurídico da empresa:</strong> {{empresa.tipoJuridicoEmpresa}}</li>
+                  </ul>
+               </div>
+               <hr>
+               <div class="text-center d-flex justify-content-center">
+                  <a href="/empresaroutes/alteracaoroute/{{empresa.id}}" class="btn btn-success mx-2">Alterar Pedido</a>
+                  <form action="/empresaroutes/togglestatusroute" method="POST">
+                     <input type="hidden" name="id" value="{{empresa.id}}">
+                     {{#if (eq empresa.status 'ativo')}}
+                        <button type="submit" class="btn btn-danger mx-2">Desativar Empresa</button>
+                     {{else}}
+                        <button type="submit" class="btn btn-primary mx-2">Ativar Empresa</button>
+                     {{/if}}
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
    </div>
 </div>

@@ -1,34 +1,38 @@
-<div class="box-header-equipamento mb-4">
-  <div class="card-body">
-    <h4>{{pedido.nome}}</h4>
-    <small>Cor da sacola: {{pedido.corSacola}}</small>
-    <br>
-    <small>Cor da tinta: {{pedido.corTinta}}</small>
-    <br>
-    <small>Quantidade: {{pedido.quantidade}}</small>
-    <br>
-    <small>Tamanho: {{pedido.tamanho}}</small>
-    <br>
-    <small>Tipo: {{pedido.tipo}}</small>
-    <br>
-    <small>Preço: {{pedido.preco}}</small>
-    <br>
-    <small>Empresa que fez o pedido: {{pedido.empresa.nomeEmpresa}}</small>
-    <br>
-    <small>Funcionário que fez o pedido: {{pedido.funcionario.nome}}</small>
-    <br>
-    <small>Estado Atual: <span id="estado{{id}}">{{pedido.estado}}</span></small>
-    <br>
-    <a href="/pedidoroutes/alteracaoroute/{{pedido.id}}"><button class="btn btn-success mt-4">Alterar Pedido</button></a>
-    <form action="/pedidoroutes/togglestatusroute" method="POST">
-      <input type="hidden" name="id" value="{{pedido.id}}">
-      {{#if (eq pedido.status 'em andamento')}}
-      <button type="submit" class="btn btn-danger mt-2">Concluir pedido</button>
-      {{else}}
-      <button type="submit" class="btn btn-primary mt-2">Colocar pedido em andamento</button>
-      {{/if}}
-    </form>
-    <button class="btn btn-warning mt-2" onclick="atualizarEstado('{{pedido.id}}')">Próximo Estado</button>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-center">{{pedido.nome}}</h4>
+          <hr>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Cor da sacola:</strong> {{pedido.corSacola}}</li>
+            <li class="list-group-item"><strong>Cor da tinta:</strong> {{pedido.corTinta}}</li>
+            <li class="list-group-item"><strong>Quantidade:</strong> {{pedido.quantidade}}</li>
+            <li class="list-group-item"><strong>Tamanho:</strong> {{pedido.tamanho}}</li>
+            <li class="list-group-item"><strong>Tipo:</strong> {{pedido.tipo}}</li>
+            <li class="list-group-item"><strong>Preço:</strong> {{pedido.preco}}</li>
+            <li class="list-group-item"><strong>Empresa:</strong> {{pedido.empresa.nomeEmpresa}}</li>
+            <li class="list-group-item"><strong>Funcionário:</strong> {{pedido.funcionario.nome}}</li>
+            <li class="list-group-item"><strong>Estado Atual:</strong> <span id="estado{{id}}">{{pedido.estado}}</span></li>
+          </ul>
+          <hr>
+          <div class="text-center">
+            <div class="btn-group" role="group" aria-label="Pedido Buttons">
+              <a href="/pedidoroutes/alteracaoroute/{{pedido.id}}" class="btn btn-success mx-2">Alterar Pedido</a>
+              <form action="/pedidoroutes/togglestatusroute" method="POST">
+                <input type="hidden" name="id" value="{{pedido.id}}">
+                {{#if (eq pedido.status 'em andamento')}}
+                  <button type="submit" class="btn btn-danger mx-2">Concluir Pedido</button>
+                {{else}}
+                  <button type="submit" class="btn btn-primary mx-2">Iniciar Pedido</button>
+                {{/if}}
+              </form>
+              <button class="btn btn-warning mx-2" onclick="atualizarEstado('{{pedido.id}}')">Próximo Estado</button>
+            </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <script>

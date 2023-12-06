@@ -149,7 +149,7 @@ router.post('/excluirroute',isAuthenticaded,isFuncaoAdministrador,(req,res) => {
 
 router.post('/login', (req, res, next) => {
   passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: "/pedidoroutes",
     failureRedirect: "/login",
     failureFlash: true
   })(req, res, next)
