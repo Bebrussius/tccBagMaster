@@ -20,7 +20,7 @@ const Pedido = db.sequelize.define('pedido', {
     allowNull: false
   },
   tamanho: {
-    type: db.Sequelize.INTEGER,
+    type: db.Sequelize.STRING,
     allowNull: false
   },
   tipo: {

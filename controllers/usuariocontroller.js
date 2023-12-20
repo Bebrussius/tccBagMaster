@@ -66,7 +66,7 @@ router.post('/incluirroute',(req,res) => {
 
         novoUsuario.save().then(() =>{
           req.flash("success_msg", "Usuário criado com sucesso!");
-          res.redirect("/");
+          res.redirect("/usuarioroutes");
         }).catch((err) =>{
           req.flash("error_msg", "Houve um erro na criação do usuário!")
           res.redirect("/usuarioroutes");

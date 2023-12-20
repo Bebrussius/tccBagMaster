@@ -30,13 +30,13 @@
                </div>
                <hr>
                <div class="text-center d-flex justify-content-center">
-                  <a href="/empresaroutes/alteracaoroute/{{empresa.id}}" class="btn btn-success mx-2">Alterar Pedido</a>
+                  <a href="/empresaroutes/alteracaoroute/{{empresa.id}}" class="btn btn-success mx-2">Alterar Cliente</a>
                   <form action="/empresaroutes/togglestatusroute" method="POST">
                      <input type="hidden" name="id" value="{{empresa.id}}">
                      {{#if (eq empresa.status 'ativo')}}
-                        <button type="submit" class="btn btn-danger mx-2">Desativar Empresa</button>
+                        <button type="submit" class="btn btn-danger mx-2">Desativar Cliente</button>
                      {{else}}
-                        <button type="submit" class="btn btn-primary mx-2">Ativar Empresa</button>
+                        <button type="submit" class="btn btn-primary mx-2">Ativar Cliente</button>
                      {{/if}}
                   </form>
                </div>

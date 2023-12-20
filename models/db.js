@@ -1,10 +1,10 @@
 //-------------------------------------------------------------------------------------------------
 const Sequelize = require("sequelize")
-const sequelize = new Sequelize('sql10667970','sql10667970','x5QbskTmAW', {
-  host:'sql10.freemysqlhosting.net',
+const sequelize = new Sequelize('bdbagmaster','root','123456', {
+  host:'localhost',
   dialect:'mysql',
   define: {
-    freezeTableName:true // evita que o sequelize coloque a tabela no plural
+    freezeTableName:true 
   }
 })
 //-------------------------------------------------------------------------------------------------

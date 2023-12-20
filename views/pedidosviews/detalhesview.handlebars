@@ -3,6 +3,9 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-body">
+                         <a href="#" class="text-secondary" onclick="history.back()">
+                  <span aria-hidden="true">&larr;</span> Voltar
+               </a>
           <h4 class="card-title text-center">{{pedido.nome}}</h4>
           <hr>
           <ul class="list-group list-group-flush">
@@ -17,47 +20,7 @@
             <li class="list-group-item"><strong>Estado Atual:</strong> <span id="estado{{id}}">{{pedido.estado}}</span></li>
           </ul>
           <hr>
-          <div class="text-center">
-            <div class="btn-group" role="group" aria-label="Pedido Buttons">
-              <a href="/pedidoroutes/alteracaoroute/{{pedido.id}}" class="btn btn-success mx-2">Alterar Pedido</a>
-              <form action="/pedidoroutes/togglestatusroute" method="POST">
-                <input type="hidden" name="id" value="{{pedido.id}}">
-                {{#if (eq pedido.status 'em andamento')}}
-                  <button type="submit" class="btn btn-danger mx-2">Concluir Pedido</button>
-                {{else}}
-                  <button type="submit" class="btn btn-primary mx-2">Iniciar Pedido</button>
-                {{/if}}
-              </form>
-              <button class="btn btn-warning mx-2" onclick="atualizarEstado('{{pedido.id}}')">Próximo Estado</button>
-            </div>
-        </div>
       </div>
     </div>
   </div>
 </div>
-<script>
-function atualizarEstado(pedidoId) {
-  console.log('Função atualizarEstado chamada');
-  fetch(`/pedidoroutes/atualizarestado/${pedidoId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-  .then((response) => response.json())
-  .then((data) => {
-    console.log('Resposta do servidor:', data);
-    if (data.success) {
-      console.log('Estado atualizado com sucesso');
-      // Reload the page after successful state update
-      window.location.reload(true);
-    } else {
-      console.log('Erro ao atualizar o estado');
-    }
-  })
-  .catch((error) => {
-    console.error('Erro na requisição:', error);
-    alert('Erro na requisição. Verifique o console para mais detalhes.');
-  });
-}
-</script>

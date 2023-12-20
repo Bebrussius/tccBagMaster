@@ -10,3 +10,8 @@ body{
 .text_btn{
     background-color: white;
 }
+
+*{
+    margin: 0;
+    padding: 0;
+}

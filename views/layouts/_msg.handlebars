@@ -1,6 +1,18 @@
 {{#if success_msg}}
-  <div class="alert alert-success">{{success_msg}}</div>
+  <div class="alert alert-success alert-dismissible fade show mt-4 d-flex justify-content-between align-items-center" role="alert">
+    <span>{{success_msg}}</span>
+    <a href="#" class="close-icon text-dark" data-bs-dismiss="alert" aria-label="Close">
+      <i class="fas fa-times fa-lg"></i>
+    </a>
+  </div>
 {{/if}}
 {{#if error_msg}}
-  <div class="alert alert-danger">{{error_msg}}</div>
+  <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert">
+    <span>{{error_msg}}</span>
+    <a href="#" class="close-icon text-dark" data-bs-dismiss="alert" aria-label="Close">
+      <i class="fas fa-times fa-lg"></i>
+    </a>
+  </div>
 {{/if}}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -209,7 +209,7 @@ router.post('/alterarroute', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
     res.render('empresaviews/alteracaoview', { erros: erros })
   } else {
     Empresa.findOne({ where: { id: req.body.id } }).then((empresas) => {
-      empresas.nome = req.body.nome;
+      empresas.nomeEmpresa = req.body.nomeEmpresa;
       empresas.CNPJ = req.body.CNPJ;
       empresas.CEP = req.body.CEP;
       empresas.enderecoEmpresa = req.body.enderecoEmpresa;

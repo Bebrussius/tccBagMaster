@@ -17,9 +17,10 @@ const { isAuthenticaded } = require("../helpers/isAuthenticated")
 const { isFuncaoPedidos } = require('../helpers/isFuncaoPedidos');
 router.client = null;
 
+const { Sequelize, Op } = require('sequelize');
 //-------------------------------------------------------------------------------------------------
 
-router.get('/', isAuthenticaded, isFuncaoPedidos, (req, res) => {
+router.get('/', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
   let whereCondition = {
     status: 'em andamento',
   };
@@ -28,30 +29,107 @@ router.get('/', isAuthenticaded, isFuncaoPedidos, (req, res) => {
     whereCondition = {};
   }
 
-  Pedido.findAll({
-    include: [
-      {
-        model: Empresa,
-        as: 'empresa',
-      },
-      {
-        model: Usuario,
-        as: 'funcionario',
-      }
-    ],
-    where: whereCondition,
-  })
-    .then((pedidos) => {
-      res.render('pedidosviews/gerenciaview', {
-        pedidos: pedidos,
-        showDesativadas: req.query.showDesativadas ? true : false,
-      });
-    })
-    .catch((erro) => {
-      req.flash('erros_msg', 'Houve um erro ao listar pedidos!');
-      console.log(erro);
-      res.redirect('/');
+  let pedidos = [];
+  
+  if (req.query.search) {
+    // Se houver um parâmetro de pesquisa, busque todos os pedidos e ordene-os
+    // para que o pedido correspondente à pesquisa seja exibido primeiro.
+    pedidos = await Pedido.findAll({
+      include: [
+        {
+          model: Empresa,
+          as: 'empresa',
+        },
+        {
+          model: Usuario,
+          as: 'funcionario',
+        },
+      ],
+      where: whereCondition,
     });
+
+    // Filtrar o pedido correspondente à pesquisa.
+    const searchTerm = req.query.search.toLowerCase();
+    const matchingPedido = pedidos.find(pedido =>
+      pedido.nome.toLowerCase().includes(searchTerm) ||
+      pedido.id.toString() === searchTerm ||
+      (pedido.funcionario && pedido.funcionario.nome.toLowerCase().includes(searchTerm)) ||
+      (pedido.empresa && pedido.empresa.nomeEmpresa.toLowerCase().includes(searchTerm))
+    );
+
+    if (matchingPedido) {
+      // Mover o pedido correspondente à pesquisa para o topo.
+      pedidos = [matchingPedido, ...pedidos.filter(pedido => pedido !== matchingPedido)];
+    }
+  } else {
+    // Se não houver um parâmetro de pesquisa, apenas busque todos os pedidos.
+    pedidos = await Pedido.findAll({
+      include: [
+        {
+          model: Empresa,
+          as: 'empresa',
+        },
+        {
+          model: Usuario,
+          as: 'funcionario',
+        },
+      ],
+      where: whereCondition,
+    });
+  }
+
+  res.render('pedidosviews/gerenciaview', {
+    pedidos: pedidos,
+    showDesativadas: req.query.showDesativadas ? true : false,
+  });
+});
+
+router.get('/search', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
+  try {
+    let whereCondition = {
+      status: 'em andamento',
+    };
+
+    if (req.query.showDesativadas) {
+      whereCondition = {};
+    }
+
+    const searchTerm = req.query.search.toLowerCase();
+
+    whereCondition[Op.or] = [
+      { nome: { [Op.like]: `%${searchTerm}%` } },
+      { '$funcionario.nome$': { [Op.like]: `%${searchTerm}%` } },
+      { '$empresa.telefoneEmpresa$': { [Op.like]: `%${searchTerm}%` } },
+      { '$empresa.nomeEmpresa$': { [Op.like]: `%${searchTerm}%` } },
+      { id: { [Op.eq]: searchTerm } },
+    ];
+
+    const pedidos = await Pedido.findAll({
+      include: [
+        {
+          model: Empresa,
+          as: 'empresa',
+        },
+        {
+          model: Usuario,
+          as: 'funcionario',
+        },
+      ],
+      where: whereCondition,
+    });
+
+    // Identificar o pedido pesquisado
+    const pedidoPesquisadoIndex = pedidos.findIndex(pedido => pedido.id.toString() === searchTerm);
+
+    res.render('pedidosviews/gerenciaview', {
+      pedidos: pedidos,
+      pedidoPesquisadoIndex: pedidoPesquisadoIndex,
+      showDesativadas: req.query.showDesativadas ? true : false,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Erro ao buscar pedidos' });
+  }
 });
 //-------------------------------------------------------------------------------------------------
 
