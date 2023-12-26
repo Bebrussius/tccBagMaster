@@ -1,26 +1,31 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body">
-                         <a href="#" class="text-secondary" onclick="history.back()">
-                  <span aria-hidden="true">&larr;</span> Voltar
-               </a>
-          <h4 class="card-title text-center">{{pedido.nome}}</h4>
-          <hr>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item"><strong>Cor da sacola:</strong> {{pedido.corSacola}}</li>
-            <li class="list-group-item"><strong>Cor da tinta:</strong> {{pedido.corTinta}}</li>
-            <li class="list-group-item"><strong>Quantidade:</strong> {{pedido.quantidade}}</li>
-            <li class="list-group-item"><strong>Tamanho:</strong> {{pedido.tamanho}}</li>
-            <li class="list-group-item"><strong>Tipo:</strong> {{pedido.tipo}}</li>
-            <li class="list-group-item"><strong>Preço:</strong> {{pedido.preco}}</li>
-            <li class="list-group-item"><strong>Empresa:</strong> {{pedido.empresa.nomeEmpresa}}</li>
-            <li class="list-group-item"><strong>Funcionário:</strong> {{pedido.funcionario.nome}}</li>
-            <li class="list-group-item"><strong>Estado Atual:</strong> <span id="estado{{id}}">{{pedido.estado}}</span></li>
-          </ul>
-          <hr>
-      </div>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <a href="#" class="btn btn-light" onclick="history.back()">
+                        <i class="fas fa-arrow-left fa-lg"></i> Voltar
+                    </a>
+                    <h4 class="card-title text-center mb-4">{{pedido.nome}}</h4>
+                    <hr>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong><i class="fas fa-paint-brush"></i> Cor da sacola:</strong> {{pedido.corSacola}}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-palette"></i> Cor da tinta:</strong> {{pedido.corTinta}}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-cubes"></i> Quantidade:</strong> {{pedido.quantidade}}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-arrows-alt"></i> Tamanho:</strong> {{pedido.tamanho}}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-tags"></i> Tipo:</strong> {{pedido.tipo}}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-money-bill-wave"></i> Preço:</strong> {{pedido.preco}}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-industry"></i> Empresa:</strong> {{pedido.empresa.nomeEmpresa}}</li>
+                        <li class="list-group-item"><strong><i class="fas fa-user-tie"></i> Funcionário:</strong> {{pedido.funcionario.nome}}</li>
+                        <li class="list-group-item">
+                            <strong><i class="fas fa-info-circle"></i> Estado Atual:</strong>
+                            <span id="estado{{id}}" class="badge badge-primary">{{pedido.estado}}</span>
+                        </li>
+                    </ul>
+                    <hr>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

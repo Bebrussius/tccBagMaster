@@ -1,27 +1,24 @@
 <div class="box-header-equipamento mb-4">
-  <h2 class="mb-4"> Bem-vindo à seção de Pedidos! </h2>
-  <form action="/pedidoroutes" method="GET" class="mb-3">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="mb-md-0">
-        <input type="checkbox" name="showDesativadas" {{#if showDesativadas}}checked{{/if}}>
-        <label for="showDesativadas">Mostrar Encerrados</label>
-        <button type="submit" class="btn btn-primary ms-2">Atualizar</button>
-      </div>
-      <a href="/pedidoroutes/exibirinclusaoroute" class="btn btn-success">Adicionar Pedido</a>
-    </div>
-  </form>
+  <h2 class="mb-4">Gerenciamento de Pedidos</h2>
 </div>
 <div>
-<form action="/pedidoroutes" method="GET" class="mb-3">
-  <!-- O código existente do formulário -->
-
-  <div class="mb-3">
-    <label for="search">Pesquisar Pedido:</label>
-    <input type="text" name="search" id="search" class="form-control" placeholder="Digite o nome do pedido" value="{{search}}">
-    <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
-  </div>
-</form>
-
+  <form action="/pedidoroutes" method="GET" class="mb-3">
+    <div class="mb-3 d-flex justify-content-between">
+      <input type="text" name="search" id="search" class="form-control flex-grow-1" placeholder="Pesquisar por termo"
+        value="{{search}}">
+      <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-search mr-2"></i>Pesquisar</button>
+      <a href="/pedidoroutes/exibirinclusaoroute" class="btn btn-success ml-2">Adicionar Pedido</a>
+    </div>
+  </form>
+  <form action="/pedidoroutes" method="GET" class="mb-3">
+    <div class="mb-3 d-flex justify-content-between">
+      <select name="statusFilter" class="form-control flex-grow-1" onchange="this.form.submit()">
+        <option value="todos" {{#if (eq statusFilter 'todos' )}}selected{{/if}}>Todos</option>
+        <option value="em andamento" {{#if (eq statusFilter 'em andamento' )}}selected{{/if}}>Em Andamento</option>
+        <option value="desativado" {{#if (eq statusFilter 'desativado' )}}selected{{/if}}>Encerrados</option>
+      </select>
+    </div>
+  </form>
 </div>
 <div class="table">
   <div class="table-responsive">
@@ -49,24 +46,24 @@
           <td class="align-middle">{{estado}}</td>
           <td class="align-middle">{{#if (eq status 'desativado')}}Sim{{else}}Não{{/if}}</td>
           <td class="align-middle">
-            <div class="d-flex justify-content-between">
-              <a href="/pedidoroutes/pedidoDetalhesRoute/{{id}}" class="text-dark mr-2">
-                <i class="fas fa-search"></i>
+            <div class="d-flex align-items-center justify-content-between">
+              <a href="/pedidoroutes/pedidoDetalhesRoute/{{id}}" class="text-dark">
+                <i class="fas fa-search mr-2"></i>
               </a>
-              <a href="/pedidoroutes/alteracaoroute/{{id}}" class="text-dark mr-2">
-                <i class="fas fa-pen"></i>
+              <a href="/pedidoroutes/alteracaoroute/{{id}}" class="text-dark">
+                <i class="fas fa-pen mr-2"></i>
               </a>
               <form action="/pedidoroutes/togglestatusroute" method="POST" class="text-dark">
                 <input type="hidden" name="id" value="{{id}}">
-                <button type="submit" class="btn btn-link p-0 text-dark mr-2">
+                <button type="submit" class="btn btn-link p-0 text-dark">
                   {{#if (eq status 'em andamento')}}
-                  <i class="fas fa-trash"></i>
+                  <i class="fas fa-trash mr-2"></i>
                   {{else}}
-                  <i class="fas fa-check-circle"></i>
+                  <i class="fas fa-check-circle mr-2"></i>
                   {{/if}}
                 </button>
               </form>
-              <a href="#" class="text-dark mr-2" onclick="atualizarEstado('{{id}}')">
+              <a href="#" class="text-dark" onclick="atualizarEstado('{{id}}')">
                 <i class="fas fa-sync"></i>
               </a>
             </div>
@@ -75,7 +72,7 @@
         {{/each}}
         {{#unless pedidos.length}}
         <tr>
-          <td colspan="8" class="text-center">Nenhum pedido em andamento no momento!</td>
+          <td colspan="8" class="text-center">Nenhum pedido aqui no momento!</td>
         </tr>
         {{/unless}}
       </tbody>
@@ -84,7 +81,6 @@
 </div>
 
 <style>
-  /* Adicione este bloco de estilo para personalizar as bordas */
   .table-bordered-dark tbody tr,
   .table-bordered-dark thead tr {
     border-color: #000;
@@ -94,6 +90,58 @@
   .table-bordered-dark td {
     border: 1px solid #000;
   }
+
+  #search::placeholder {
+    opacity: 0.7;
+  }
+
+  body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f8f9fa;
+  color: #343a40;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.table th, .table td {
+  text-align: center;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-responsive {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Adaptação do estilo Bootstrap para input de pesquisa */
+.form-control {
+  border-radius: 0.25rem;
+}
+
+#search::placeholder {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* Efeitos de transição suave */
+.btn, .form-control {
+  transition: 0.3s ease;
+}
 </style>
 
 <script>
@@ -110,7 +158,6 @@
         console.log('Resposta do servidor:', data);
         if (data.success) {
           console.log('Estado atualizado com sucesso');
-          // Reload the page after successful state update
           window.location.reload(true);
         } else {
           console.log('Erro ao atualizar o estado');
@@ -120,5 +167,11 @@
         console.error('Erro na requisição:', error);
         alert('Erro na requisição. Verifique o console para mais detalhes.');
       });
+  }
+
+  function updateFormAction() {
+    const statusFilter = document.querySelector('[name="statusFilter"]').value;
+    const statusFilterForm = document.getElementById('statusFilterForm');
+    statusFilterForm.action = `/pedidoroutes?statusFilter=${statusFilter}`;
   }
 </script>

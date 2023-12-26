@@ -14,14 +14,36 @@
 
         nav {
             background-color: #020060;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .custom-nav-link {
-            color: #FFFFFF;
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .navbar-toggler-icon {
+            border-color: #fff;
+        }
+
+        .navbar-nav {
+            margin-right: 15px; 
+        }
+
+        .nav-item {
+            margin: 0 10px; 
+        }
+
+        .nav-link {
+            color: #fff !important; 
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            color: #007bff !important;
         }
 
         @media (max-width: 768px) {
-
             h2,
             h4 {
                 font-size: 16px;
@@ -36,12 +58,12 @@
     </style>
 </head>
 
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand">
             <span class="text-white">BagMaster</span>
         </a>
-        <img src="../../public/uploads/BagMaster.png" alt="">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#conteudoNavbarSuportado"
             aria-controls="conteudoNavbarSuportado" aria-expanded="false" aria-label="Alterna navegação">
             <span class="navbar-toggler-icon"></span>
@@ -52,48 +74,52 @@
                 {{#if (eq user.funcao 'Administrador')}}
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/empresaroutes">Clientes</a>
+                    <a class="nav-link" href="/empresaroutes">
+                        <i class="fas fa-user-friends"></i> Clientes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/pedidoroutes">Pedidos</a>
+                    <a class="nav-link" href="/pedidoroutes">
+                        <i class="fas fa-clipboard-list"></i> Pedidos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/usuarioroutes">Funcionários</a>
+                    <a class="nav-link" href="/usuarioroutes">
+                        <i class="fas fa-users"></i> Funcionários</a>
                 </li>
                 {{else}}
                 {{#if (eq user.funcao 'Empresa')}}
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/empresaroutes">Clientes</a>
+                    <a class="nav-link" href="/empresaroutes">
+                        <i class="fas fa-user-friends"></i> Clientes</a>
                 </li>
                 {{#if (eq user.funcao 'Pedidos')}}
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/pedidoroutes">Pedidos</a>
+                    <a class="nav-link" href="/pedidoroutes">
+                        <i class="fas fa-clipboard-list"></i> Pedidos</a>
                 </li>
                 {{/if}}
                 {{else}}
 
                 <li class="nav-item">
-                    <a class="nav-link" href="/pedidoroutes">Pedidos</a>
+                    <a class="nav-link" href="/pedidoroutes">
+                        <i class="fas fa-clipboard-list"></i> Pedidos</a>
                 </li>
                 {{/if}}
                 {{/if}}
                 <li class="nav-item">
-                    <a class="nav-link" href="/usuarioroutes/logout">Logout</a>
+                    <a class="nav-link" href="/usuarioroutes/logout">
+                        <i class="fas fa-sign-out-alt"></i> Sair</a>
                 </li>
                 {{else}}
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
                 {{/if}}
             </ul>
         </div>
-    </nav>
+    </nav>    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/5d50d9fba3.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </body>
 
 </html>

@@ -21,19 +21,17 @@ const { Sequelize, Op } = require('sequelize');
 //-------------------------------------------------------------------------------------------------
 
 router.get('/', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
-  let whereCondition = {
-    status: 'em andamento',
-  };
+  let whereCondition = {}; // Remove the condition related to status
 
-  if (req.query.showDesativadas) {
-    whereCondition = {};
+  if (req.query.statusFilter && req.query.statusFilter !== 'todos') {
+    whereCondition = {
+      status: req.query.statusFilter,
+    };
   }
 
   let pedidos = [];
-  
-  if (req.query.search) {
-    // Se houver um parâmetro de pesquisa, busque todos os pedidos e ordene-os
-    // para que o pedido correspondente à pesquisa seja exibido primeiro.
+
+  if (req.query.statusFilter === 'todos') {
     pedidos = await Pedido.findAll({
       include: [
         {
@@ -45,24 +43,9 @@ router.get('/', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
           as: 'funcionario',
         },
       ],
-      where: whereCondition,
     });
-
-    // Filtrar o pedido correspondente à pesquisa.
-    const searchTerm = req.query.search.toLowerCase();
-    const matchingPedido = pedidos.find(pedido =>
-      pedido.nome.toLowerCase().includes(searchTerm) ||
-      pedido.id.toString() === searchTerm ||
-      (pedido.funcionario && pedido.funcionario.nome.toLowerCase().includes(searchTerm)) ||
-      (pedido.empresa && pedido.empresa.nomeEmpresa.toLowerCase().includes(searchTerm))
-    );
-
-    if (matchingPedido) {
-      // Mover o pedido correspondente à pesquisa para o topo.
-      pedidos = [matchingPedido, ...pedidos.filter(pedido => pedido !== matchingPedido)];
-    }
   } else {
-    // Se não houver um parâmetro de pesquisa, apenas busque todos os pedidos.
+    // Continue with your existing logic for 'em andamento' and 'desativado'
     pedidos = await Pedido.findAll({
       include: [
         {
@@ -80,8 +63,52 @@ router.get('/', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
 
   res.render('pedidosviews/gerenciaview', {
     pedidos: pedidos,
-    showDesativadas: req.query.showDesativadas ? true : false,
+    statusFilter: req.query.statusFilter || 'todos', // Set the default to 'todos' if not provided
   });
+});
+
+router.get('/search', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
+  try {
+    let whereCondition = {
+      status: 'em andamento',
+    };
+
+    if (req.query.showDesativadas) {
+      whereCondition = {};
+    }
+
+    // Rest of your existing code...
+
+    const pedidos = await Pedido.findAll({
+      include: [
+        {
+          model: Empresa,
+          as: 'empresa',
+        },
+        {
+          model: Usuario,
+          as: 'funcionario',
+        },
+      ],
+      where: whereCondition,
+    });
+
+    // Identificar o pedido pesquisado
+    const pedidoPesquisadoIndex = pedidos.findIndex(
+      (pedido) => pedido.id.toString() === searchTerm
+    );
+
+    res.render('pedidosviews/gerenciaview', {
+      pedidos: pedidos,
+      pedidoPesquisadoIndex: pedidoPesquisadoIndex,
+      showDesativadas: req.query.showDesativadas ? true : false,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, error: 'Erro ao buscar pedidos' });
+  }
 });
 
 router.get('/search', isAuthenticaded, isFuncaoPedidos, async (req, res) => {
@@ -191,82 +218,69 @@ router.get('/exibirinclusaoroute/parteDois', isAuthenticaded, isFuncaoPedidos, (
 })
 
 //-------------------------------------------------------------------------------------------------
-
 router.post('/incluirroute/pedido', isAuthenticaded, isFuncaoPedidos, (req, res) => {
-  var erros = []
+  var erros = [];
+  
   if (!req.body.nome || typeof req.body.nome == undefined || req.body.nome == null) {
-    erros.push({ texto: 'Nome do pedido inválido!' })
+    erros.push({ texto: 'Nome do pedido inválido!' });
   }
   if (!req.body.corSacola || typeof req.body.corSacola == undefined || req.body.corSacola == null) {
-    erros.push({ texto: 'Cor da sacola inválida!' })
+    erros.push({ texto: 'Cor da sacola inválida!' });
   }
   if (!req.body.corTinta || typeof req.body.corTinta == undefined || req.body.corTinta == null) {
-    erros.push({ texto: 'Cor da tinta inválida!' })
+    erros.push({ texto: 'Cor da tinta inválida!' });
   }
   if (!req.body.quantidade || typeof req.body.quantidade == undefined || req.body.quantidade == null) {
-    erros.push({ texto: 'Quantidade inválida!' })
+    erros.push({ texto: 'Quantidade inválida!' });
   }
   if (!req.body.tamanho || typeof req.body.tamanho == undefined || req.body.tamanho == null) {
-    erros.push({ texto: 'Tamanho inválido!' })
+    erros.push({ texto: 'Tamanho inválido!' });
   }
   if (!req.body.tipo || typeof req.body.tipo == undefined || req.body.tipo == null) {
-    erros.push({ texto: 'Tipo inválido!' })
+    erros.push({ texto: 'Tipo inválido!' });
   }
   if (!req.body.impressao || typeof req.body.impressao == undefined || req.body.impressao == null) {
-    erros.push({ texto: 'Impressão inválida!' })
+    erros.push({ texto: 'Impressão inválida!' });
   }
-  if (erros.length > 0) {
-    res.render('pedidosviews/inclusaoview', { erros: erros })
-  } else {
-    const dadosPedido = {
-      nome: req.body.nome,
-      corSacola: req.body.corSacola,
-      corTinta: req.body.corTinta,
-      quantidade: req.body.quantidade,
-      tamanho: req.body.tamanho,
-      tipo: req.body.tipo,
-      impressao: req.body.impressao,
-    }
 
-    req.session.dadosPedido = dadosPedido;
-
-    res.redirect('/pedidoroutes/exibirinclusaoroute/parteDois');
-  }
-})
-router.post('/incluirroute/concluir', isAuthenticaded, isFuncaoPedidos, (req, res) => {
-  var erros = []
   if (!req.body.preco || typeof req.body.preco == undefined || req.body.preco == null) {
-    erros.push({ texto: 'Preco inválido!' })
+    erros.push({ texto: 'Preco inválido!' });
   }
   if (!req.body.empresaPedido || typeof req.body.empresaPedido == undefined || req.body.empresaPedido == null) {
-    erros.push({ texto: 'Empresa que fez o pedido inválida!' })
+    erros.push({ texto: 'Empresa que fez o pedido inválida!' });
   }
   if (!req.body.funcionarioPedido || typeof req.body.funcionarioPedido == undefined || req.body.funcionarioPedido == null) {
-    erros.push({ texto: 'Funcionario que adicionou pedido inválido!' })
+    erros.push({ texto: 'Funcionario que adicionou pedido inválido!' });
   }
+
   if (erros.length > 0) {
-    res.render('pedidosviews/inclusaoview', { erros: erros })
-  } else {
-    const dadosPedido = req.session.dadosPedido;
+    return res.render('pedidosviews/inclusaoview', { erros: erros });
+  }
 
-    const dadosPedidocompleto = {
-      ...dadosPedido,
-      preco: req.body.preco,
-      empresaPedido: req.body.empresaPedido,
-      funcionarioPedido: req.body.funcionarioPedido,
-    }
+  const dadosPedido = {
+    nome: req.body.nome,
+    corSacola: req.body.corSacola,
+    corTinta: req.body.corTinta,
+    quantidade: req.body.quantidade,
+    tamanho: req.body.tamanho,
+    tipo: req.body.tipo,
+    impressao: req.body.impressao,
+    preco: req.body.preco,
+    empresaPedido: req.body.empresaPedido,
+    funcionarioPedido: req.body.funcionarioPedido,
+  };
 
-    Pedido.create(dadosPedidocompleto).then(() => {
+  Pedido.create(dadosPedido)
+    .then(() => {
       req.flash('success_msg', 'Cadastro de pedido concluído com sucesso!');
       res.redirect('/pedidoroutes');
-    }).catch((err) => {
+    })
+    .catch((err) => {
       req.flash('erros_msg', 'Não foi possível concluir o cadastro do pedido!');
       console.log(err);
       res.redirect('/pedidoroutes');
     });
-  }
-})
-
+});
 //-------------------------------------------------------------------------------------------------
 
 router.post('/atualizarestado/:id', isAuthenticaded, isFuncaoPedidos, async (req, res) => {

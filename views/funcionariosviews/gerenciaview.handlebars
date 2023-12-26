@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-md-6">
       <div class="box-header-equipamento mb-4">
-        <h2 class="text-md mb-4">Bem-vindo à seção de Funcionários!</h2>
+        <h2 class="text-md mb-4">Gerenciamento de Clientes</h2>
         <a href="/usuarioroutes/exibirinclusaoroute">
-          <button class="btn btn-primary">Incluir funcionário</button>
+          <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Incluir cliente</button>
         </a>
       </div>
     </div>
@@ -13,29 +13,42 @@
   <div class="row">
     {{#each usuarios}}
     <div class="col-md-6 col-lg-4">
-      <!-- Use col-md-6 para telas médias e col-lg-4 para telas grandes -->
       <div class="box-header-equipamento mb-4">
         <div class="card">
           <div class="card-body">
             <h4>{{nome}}</h4>
-            <p>Telefone: {{telefone}}</p>
-            <p>Email: {{email}}</p>
-            <p>Senha: {{senha}}</p>
-            <p>Função: {{funcao}}</p>
+            <p><i class="fas fa-phone"></i> Telefone: {{telefone}}</p>
+            <p><i class="fas fa-envelope"></i> Email: {{email}}</p>
+            <p><i class="fas fa-key"></i> Senha: {{senha}}</p>
+            <p><i class="fas fa-user"></i> Função: {{funcao}}</p>
 
             <a href="/usuarioroutes/alteracaoroute/{{id}}">
-              <button class="btn mt-4 w-100" style="background-color: #020060; color: #ffffff;">Alterar funcionário</button>
+              <button class="btn btn-primary mt-3 w-100"><i class="fas fa-edit"></i> Alterar cliente</button>
             </a>
             <form action="/usuarioroutes/excluirroute" method="POST">
               <input type="hidden" name="id" value="{{id}}">
-              <button type="submit" class="btn btn-dark mt-2 w-100">Arquivar funcionário</button>
+              <button type="submit" class="btn btn-danger mt-2 w-100"><i class="fas fa-archive"></i> Arquivar cliente</button>
             </form>
           </div>
         </div>
       </div>
     </div>
     {{else}}
-    <h4 class="mt-3" id="nenhumEquipamentoh4">Nenhum funcionário cadastrado!</h4>
+    <div class="col-md-12">
+      <h4 class="mt-3" id="nenhumEquipamentoh4"><i class="fas fa-exclamation-circle"></i> Nenhum cliente cadastrado!</h4>
+    </div>
     {{/each}}
   </div>
 </div>
+
+<style>
+    body, h2, h4, p {
+    font-family: 'Your Chosen Font', sans-serif; /* Replace 'Your Chosen Font' with the desired font-family */
+    background-color: #f8f9fa;
+  }
+
+  .table-bordered-dark tbody tr,
+  .table-bordered-dark thead tr {
+    border-color: #000;
+  }
+</style>

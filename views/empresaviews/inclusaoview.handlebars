@@ -1,44 +1,146 @@
-<div class="box-header-equipamento mb-4">
-    <div class="card-body mt-5" style="background-color: white; text-align: center; border-radius: 15px;">
-        <h3 class="mt-3">Adicionando Cliente</h3>
-        <form action="/empresaroutes/incluirroute/empresa" method="POST" class="text-left">
-            
-            <div class="form-group">
-                <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da empresa" class=" mt-3 form-control col-8 mx-auto" style="background-color: #D5D5D5;">
+<title>Adicionando Cliente</title>
+<div class="container mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="box-header">
+                <h3 class="text-center mb-4">Adicionando Cliente</h3>
+                <form action="/empresaroutes/incluirroute/empresa" method="POST">
+                    <div class="form-group">
+                        <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da empresa"
+                            class="form-control">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" id="CNPJ" name="CNPJ" placeholder="CNPJ (XX.XXX.XXX/000X-XX)"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" id="CEP" name="CEP" placeholder="CEP (XXXXX-XXX)"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="enderecoEmpresa" name="enderecoEmpresa" placeholder="Endereço da empresa"
+                            class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="telefoneEmpresa" name="telefoneEmpresa"
+                            placeholder="Telefone de contato da empresa" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" id="emailEmpresa" name="emailEmpresa"
+                            placeholder="Email de contato da empresa" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="tipoJuridicoEmpresa" name="tipoJuridicoEmpresa"
+                            placeholder="Tipo jurídico da empresa" class="form-control">
+                    </div>
+
+                    <hr class="my-4">
+                    <h3 class="text-center mb-4">Adicionando Cliente - Pessoa Física</h3>
+
+                    <div class="form-group">
+                        <input type="text" id="nomePessoa" name="nomePessoa" placeholder="Nome da pessoa"
+                            class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="telefonePessoa" name="telefonePessoa" placeholder="Telefone de contato"
+                            class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="emailPessoa" name="emailPessoa" placeholder="E-mail de contato"
+                            class="form-control">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" id="CPF" name="CPF" placeholder="CPF (XXX.XXX.XXX-YY)"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="text" id="RG" name="RG" placeholder="RG" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="enderecoPessoa" name="enderecoPessoa" placeholder="Endereço da pessoa"
+                            class="form-control">
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-custom btn-lg col-12">Adicionar cliente</button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="form-group">
-                <input type="text" id="CNPJ" name="CNPJ" placeholder="CNPJ ( XX.XXX.XXX/000X-XX )" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
-            </div>
-            
-            <div class="form-group">
-                <input type="text" id="CEP" name="CEP" placeholder="CEP ( XXXXX-XXX )" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
-            </div>
-            
-            <div class="form-group">
-                <input type="text" id="enderecoEmpresa" name="enderecoEmpresa" placeholder="Endereço da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
-            </div>
-            
-            <div class="form-group">
-                <input type="text" id="telefoneEmpresa" name="telefoneEmpresa" placeholder="Telefone de contato da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
-            </div>
-            
-            <div class="form-group">
-                <input type="email" id="emailEmpresa" name="emailEmpresa" placeholder="Email de contato da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
-            </div>
-            
-            <div class="form-group">
-                <input type="text" id="tipoJuridicoEmpresa" name="tipoJuridicoEmpresa" placeholder="Tipo jurídico da empresa" class="form-control col-8 mx-auto" style="background-color: #D5D5D5;">
-            </div>
-            <div class="form-group">
-              <div class="text-center">
-                  <button type="submit" class="btn col-8 mx-auto" style="background-color: #020060; color: #ffffff;">Continuar</button>
-              </div>
-          
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-{{#each erros}}
-    <div class="alert alert-danger">{{texto}}</div>
-{{/each}}
+
+{{#if erros.length}}
+  <div class="container mb-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="alert-container">
+          <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+            {{#each erros}}
+              <p>{{this.texto}}</p>
+            {{/each}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}}
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .box-header {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .btn-custom {
+        background-color: #020060;
+        color: #ffffff;
+    }
+
+    .btn-custom:hover {
+        background-color: #011b4a;
+        color: #ffffff;
+        transition: 0.5s;
+    }
+
+        .alert-container {
+        max-width: 100%; /* Adjust as needed */
+        margin: 0 auto;
+    }
+
+</style>

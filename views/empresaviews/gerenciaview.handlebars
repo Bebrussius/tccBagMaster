@@ -1,18 +1,149 @@
 <div class="box-header-equipamento mb-4">
-  <h2 class="mb-4"> Bem-vindo a seção de Clientes! </h2> <a href="/empresaroutes/exibirinclusaoroute"> <button
-      class="btn col-12 btn-lg rounded-3" style="background-color: #ffffff; color: #000000; height: 15vh; ">Adicionar
-      Cliente</button> </a>
+  <h2 class="mb-4"> Gerenciamento de Clientes </h2>
 </div>
-<form action="/empresaroutes" method="GET">
-  <input type="checkbox" name="showDesativadas" {{#if showDesativadas}}checked{{/if}}>
-  <label for="showDesativadas">Mostrar Desativados</label>
-  <button type="submit" class="btn btn-primary">Atualizar</button>
-</form>
-{{#each empresas}}
-<a href="/empresaroutes/empresaDetalhesRoute/{{id}}" class="btn">
-  <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">{{nomeEmpresa}}</h5>
+<div>
+  <form action="/empresaroutes" method="GET" class="mb-3">
+    <div class="mb-3 d-flex justify-content-between">
+      <input type="text" name="search" id="search" class="form-control flex-grow-1" placeholder="Pesquisar por Cliente"
+        value="{{search}}">
+      <button type="submit" class="btn btn-primary ml-2"><i class="fas fa-search mr-2"></i>Pesquisar</button>
+      <a href="/empresaroutes/exibirinclusaoroute" class="btn btn-success ml-2">Adicionar Cliente</a>
     </div>
-</a>
-</div> {{else}} <h4 class="mt-3" id="nenhumEquipamentoh4">Nenhum cliente ativa no momento!</h4> {{/each}}
+  </form>
+  <form action="/empresaroutes" method="GET" class="mb-3">
+    <div class="mb-3 d-flex justify-content-between">
+      <select name="statusFilter" class="form-control flex-grow-1" onchange="this.form.submit()">
+        <option value="todos" {{#if (eq statusFilter 'todos' )}}selected{{/if}}>Todos</option>
+        <option value="ativo" {{#if (eq statusFilter 'ativo' )}}selected{{/if}}>Em Contato</option>
+        <option value="desativado" {{#if (eq statusFilter 'desativado' )}}selected{{/if}}>Encerrados</option>
+      </select>
+    </div>
+  </form>
+</div>
+<div class="table">
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome da Empresa</th>
+          <th>Telefone da Empresa</th>
+          <th>Nome do Cliente</th>
+          <th>Telefone do Cliente</th>
+          <th>Mantém Contato?</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each empresas}}
+        <tr>
+          <td class="align-middle">{{id}}</td>
+          <td class="align-middle">{{nomeEmpresa}}</td>
+          <td class="align-middle">{{telefoneEmpresa}}</td>
+          <td class="align-middle">{{nomePessoa}}</td>
+          <td class="align-middle">{{telefonePessoa}}</td>
+          <td class="align-middle">{{#if (eq status 'ativo')}}Sim{{else}}Não{{/if}}</td>
+          <td class="align-middle">
+            <div class="d-flex align-items-center justify-content-between">
+              <a href="/empresaroutes/empresaDetalhesRoute/{{id}}" class="text-dark">
+                <i class="fas fa-search mr-2"></i>
+              </a>
+              <a href="/empresaroutes/alteracaoroute/{{id}}" class="text-dark">
+                <i class="fas fa-pen mr-2"></i>
+              </a>
+              <form action="/empresaroutes/togglestatusroute" method="POST" class="text-dark">
+                <input type="hidden" name="id" value="{{id}}">
+                <button type="submit" class="btn btn-link p-0 text-dark">
+                  {{#if (eq status 'ativo')}}
+                  <i class="fas fa-trash mr-2"></i>
+                  {{else}}
+                  <i class="fas fa-check-circle mr-2"></i>
+                  {{/if}}
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {{/each}}
+        {{#unless empresas.length}}
+        <tr>
+          <td colspan="7" class="text-center">Nenhum Cliente aqui no momento!</td>
+        </tr>
+        {{/unless}}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  .table-bordered-dark tbody tr,
+  .table-bordered-dark thead tr {
+    border-color: #000;
+  }
+
+  .table-bordered-dark th,
+  .table-bordered-dark td {
+    border: 1px solid #000;
+  }
+
+  #search::placeholder {
+    opacity: 0.7;
+  }
+
+  body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f8f9fa;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.table th, .table td {
+  text-align: center;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table-responsive {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+  border-radius: 0.25rem;
+}
+
+#search::placeholder {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.btn, .form-control {
+  transition: 0.3s ease;
+}
+
+.table .btn {
+  border-radius: 4px;
+}
+
+/* Ajuste na largura da tabela para dispositivos pequenos */
+@media (max-width: 576px) {
+  .table {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+</style>

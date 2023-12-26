@@ -8,32 +8,123 @@ const { cnpj } = require('cpf-cnpj-validator');
 const { cpf } = require('cpf-cnpj-validator');
 const cepPromise = require('cep-promise');
 const { parsePhoneNumberFromString } = require('libphonenumber-js');
+const { Sequelize, Op } = require('sequelize');
 //-------------------------------------------------------------------------------------------------
-router.get('/', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
+router.get('/', isAuthenticaded, isFuncaoEmpresas, async (req, res) => {
   console.log('showDesativadas:', req.query.showDesativadas);
 
-  let whereCondition = {
-    status: 'ativo',
-  };
+  let whereCondition = {};
 
   if (req.query.showDesativadas) {
     whereCondition = {};
+  } else {
+    whereCondition = { status: 'ativo' };
   }
 
-  Empresa.findAll({
-    where: whereCondition,
-  })
-    .then((empresas) => {
-      res.render('empresaviews/gerenciaview', {
-        empresas: empresas,
-        showDesativadas: req.query.showDesativadas ? true : false,
+  try {
+    let empresas = [];
+
+    if (req.query.search) {
+      const searchQuery = req.query.search.trim();
+
+      // Query to find the searched client
+      const searchedClient = await Empresa.findOne({
+        where: {
+          [Op.and]: [
+            whereCondition,
+            {
+              [Op.or]: [
+                { id: { [Op.like]: `%${searchQuery}%` } },
+                { nomeEmpresa: { [Op.like]: `%${searchQuery}%` } },
+                { telefoneEmpresa: { [Op.like]: `%${searchQuery}%` } },
+                { nomePessoa: { [Op.like]: `%${searchQuery}%` } },
+                { telefonePessoa: { [Op.like]: `%${searchQuery}%` } },
+              ],
+            },
+          ],
+        },
       });
-    })
-    .catch((erro) => {
-      req.flash('erros_msg', 'Houve um erro ao listar empresas!');
-      console.log(erro);
-      res.redirect('/');
+
+      // Query to find the remaining clients based on the status filter
+      const statusFilter = req.query.statusFilter || 'todos';
+
+      if (statusFilter === 'todos') {
+        empresas = await Empresa.findAll({
+          where: {
+            ...whereCondition,
+            status: {
+              [Op.or]: ['ativo', 'desativado', null],
+            },
+          },
+          order: [
+            ['status', 'ASC'], // empresas ativas primeiro (ordem ascendente)
+          ],
+        });
+      } else if (statusFilter === 'ativo') {
+        empresas = await Empresa.findAll({
+          where: {
+            ...whereCondition,
+            status: 'ativo',
+          },
+        });
+      } else if (statusFilter === 'desativado') {
+        empresas = await Empresa.findAll({
+          where: {
+            ...whereCondition,
+            status: 'desativado',
+          },
+        });
+      }
+
+      if (searchedClient) {
+        empresas = empresas.filter(
+          (client) => client.id !== searchedClient.id
+        ); // Remove the searched client if found
+        empresas.unshift(searchedClient); // Add the searched client at the beginning
+      }
+    } else {
+      // If no search query, retrieve all clients based on the status filter
+      const statusFilter = req.query.statusFilter || 'todos';
+
+      if (statusFilter === 'todos') {
+        empresas = await Empresa.findAll({
+          where: {
+            ...whereCondition,
+            status: {
+              [Op.or]: ['ativo', 'desativado', null],
+            },
+          },
+          order: [
+            ['status', 'ASC'], // empresas ativas primeiro (ordem ascendente)
+          ],
+        });
+      } else if (statusFilter === 'ativo') {
+        empresas = await Empresa.findAll({
+          where: {
+            ...whereCondition,
+            status: 'ativo',
+          },
+        });
+      } else if (statusFilter === 'desativado') {
+        empresas = await Empresa.findAll({
+          where: {
+            ...whereCondition,
+            status: 'desativado',
+          },
+        });
+      }
+    }
+
+    res.render('empresaviews/gerenciaview', {
+      empresas: empresas,
+      showDesativadas: req.query.showDesativadas ? true : false,
+      statusFilter: req.query.statusFilter || 'todos', // Pass the current status filter to the view
     });
+  } catch (erro) {
+    req.flash('erros_msg', 'Houve um erro ao listar empresas!');
+    console.log(erro);
+    res.redirect('/');
+  }
 });
 //-------------------------------------------------------------------------------------------------
 router.get('/exibirinclusaoroute', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
@@ -63,13 +154,15 @@ router.get('/empresaDetalhesRoute/:id', isAuthenticaded, isFuncaoEmpresas, (req,
 });
 //-------------------------------------------------------------------------------------------------
 router.post('/incluirroute/empresa', isAuthenticaded, isFuncaoEmpresas, async (req, res) => {
-  var erros = []
-  const numeroTelefone = parsePhoneNumberFromString(req.body.telefoneEmpresa, 'BR');
+  var erros = [];
+  const numeroTelefoneEmpresa = parsePhoneNumberFromString(req.body.telefoneEmpresa, 'BR');
+  const numeroTelefonePessoa = parsePhoneNumberFromString(req.body.telefonePessoa, 'BR');
+
   if (!req.body.nomeEmpresa || typeof req.body.nomeEmpresa == undefined || req.body.nomeEmpresa == null) {
-    erros.push({ texto: 'Nome da empresa inválido!' })
+    erros.push({ texto: 'Nome da empresa inválido!' });
   }
   if (!req.body.CNPJ || typeof req.body.CNPJ == undefined || req.body.CNPJ == null || !cnpj.isValid(req.body.CNPJ)) {
-    erros.push({ texto: 'CNPJ inválido!' })
+    erros.push({ texto: 'CNPJ inválido!' });
   }
   try {
     await cepPromise(req.body.CEP);
@@ -77,19 +170,39 @@ router.post('/incluirroute/empresa', isAuthenticaded, isFuncaoEmpresas, async (r
     erros.push({ texto: 'CEP inválido!' });
   }
   if (!req.body.enderecoEmpresa || typeof req.body.enderecoEmpresa == undefined || req.body.enderecoEmpresa == null) {
-    erros.push({ texto: 'Endereço da empresa inválido!' })
+    erros.push({ texto: 'Endereço da empresa inválido!' });
   }
-  if (!req.body.telefoneEmpresa || typeof req.body.telefoneEmpresa == undefined || req.body.telefoneEmpresa == null || !numeroTelefone.isValid()) {
-    erros.push({ texto: 'Telefone da empresa inválido!' })
+  if (!req.body.telefoneEmpresa || typeof req.body.telefoneEmpresa == undefined || req.body.telefoneEmpresa == null || !numeroTelefoneEmpresa.isValid()) {
+    erros.push({ texto: 'Telefone da empresa inválido!' });
   }
   if (!req.body.emailEmpresa || typeof req.body.emailEmpresa == undefined || req.body.emailEmpresa == null) {
-    erros.push({ texto: 'Email da empresa inválido!' })
+    erros.push({ texto: 'Email da empresa inválido!' });
   }
   if (!req.body.tipoJuridicoEmpresa || typeof req.body.tipoJuridicoEmpresa == undefined || req.body.tipoJuridicoEmpresa == null) {
-    erros.push({ texto: 'Tipo jurídico da empresa inválido!' })
+    erros.push({ texto: 'Tipo jurídico da empresa inválido!' });
   }
+
+  if (!req.body.nomePessoa || typeof req.body.nomePessoa == undefined || req.body.nomePessoa == null) {
+    erros.push({ texto: 'Nome da pessoa inválido!' });
+  }
+  if (!req.body.telefonePessoa || typeof req.body.telefonePessoa == undefined || req.body.telefonePessoa == null || !numeroTelefonePessoa.isValid()) {
+    erros.push({ texto: 'Telefone da pessoa inválido!' });
+  }
+  if (!req.body.emailPessoa || typeof req.body.emailPessoa == undefined || req.body.emailPessoa == null) {
+    erros.push({ texto: 'Email inválido!' });
+  }
+  if (!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || !cpf.isValid(req.body.CPF)) {
+    erros.push({ texto: 'CPF inválido!' });
+  }
+  if (!req.body.RG || typeof req.body.RG == undefined || req.body.RG == null || !/^\d{1,10}$/.test(req.body.RG)) {
+    erros.push({ texto: 'RG inválido!' });
+  }
+  if (!req.body.enderecoPessoa || typeof req.body.enderecoPessoa == undefined || req.body.enderecoPessoa == null) {
+    erros.push({ texto: 'Endereço da pessoa inválido!' });
+  }
+
   if (erros.length > 0) {
-    res.render('empresaviews/inclusaoview', { erros: erros })
+    res.render('empresaviews/inclusaoview', { erros: erros });
   } else {
     const dadosEmpresa = {
       nomeEmpresa: req.body.nomeEmpresa,
@@ -98,61 +211,26 @@ router.post('/incluirroute/empresa', isAuthenticaded, isFuncaoEmpresas, async (r
       enderecoEmpresa: req.body.enderecoEmpresa,
       telefoneEmpresa: req.body.telefoneEmpresa,
       emailEmpresa: req.body.emailEmpresa,
-      tipoJuridicoEmpresa: req.body.tipoJuridicoEmpresa
-    };
-
-    req.session.dadosEmpresa = dadosEmpresa;
-
-     res.redirect('/empresaroutes/exibirinclusaoroute/pessoaFisica');
-  }
-});
-
-router.post('/incluirroute/concluir', isAuthenticaded, isFuncaoEmpresas, async(req, res) => {
-  var erros = []
-  const numeroTelefone = parsePhoneNumberFromString(req.body.telefonePessoa, 'BR');
-  if (!req.body.nomePessoa || typeof req.body.nomePessoa == undefined || req.body.nomePessoa == null) {
-    erros.push({ texto: 'Nome da pessoa inválido!' })
-  }
-  if (!req.body.telefonePessoa || typeof req.body.telefonePessoa == undefined || req.body.telefonePessoa == null || !numeroTelefone.isValid()) {
-    erros.push({ texto: 'Telefone da empresa inválido!' })
-  }
-  if (!req.body.emailPessoa || typeof req.body.emailPessoa == undefined || req.body.emailPessoa == null) {
-    erros.push({ texto: 'Email inválido!' })
-  }
-  if (!req.body.CPF || typeof req.body.CPF == undefined || req.body.CPF == null || !cpf.isValid(req.body.CPF)) {
-    erros.push({ texto: 'CPF inválido!' })
-  }
-  if (!req.body.RG || typeof req.body.RG == undefined || req.body.RG == null || !/^\d{1,10}$/.test(req.body.RG)) {
-    erros.push({ texto: 'RG inválido!' })
-  }
-  if (!req.body.enderecoPessoa || typeof req.body.enderecoPessoa == undefined || req.body.enderecoPessoa == null) {
-    erros.push({ texto: 'Endereço da pessoa inválido!' })
-  }
-  if (erros.length > 0) {
-    res.render('empresaviews/inclusaoview', { erros: erros })
-  } else {
-    const dadosEmpresa = req.session.dadosEmpresa;
-
-    const dadosEmpresaCompleto = {
-      ...dadosEmpresa,
+      tipoJuridicoEmpresa: req.body.tipoJuridicoEmpresa,
       nomePessoa: req.body.nomePessoa,
       telefonePessoa: req.body.telefonePessoa,
       emailPessoa: req.body.emailPessoa,
       CPF: req.body.CPF,
       RG: req.body.RG,
       enderecoPessoa: req.body.enderecoPessoa
-    }
+    };
 
-    Empresa.create(dadosEmpresaCompleto).then(() => {
+    try {
+      await Empresa.create(dadosEmpresa);
       req.flash('success_msg', 'Cadastro da empresa concluído com sucesso!');
       res.redirect('/empresaroutes');
-    }).catch((err) => {
+    } catch (err) {
       req.flash('erros_msg', 'Não foi possível concluir o cadastro da empresa!');
       console.log(err);
       res.redirect('/empresaroutes');
-    });
+    }
   }
-})
+});
 //-------------------------------------------------------------------------------------------------
 router.get('/alteracaoroute/:id', isAuthenticaded, isFuncaoEmpresas, (req, res) => {
   Empresa.findOne({ where: { id: req.params.id } }).then((empresas) => {
@@ -253,11 +331,11 @@ router.post('/togglestatusroute', isAuthenticaded, isFuncaoEmpresas, (req, res) 
       return empresa.save();
     })
     .then(() => {
-      req.flash('success_msg', 'Status da empresa alterado com sucesso!');
+      req.flash('success_msg', 'Status do cliente alterado com sucesso!');
       res.redirect('/empresaroutes');
     })
     .catch((erro) => {
-      req.flash('error_msg', 'Não foi possível alterar o status da empresa!');
+      req.flash('error_msg', 'Não foi possível alterar o status do cliente!');
       console.log(erro);
       res.redirect('/empresaroutes');
     });

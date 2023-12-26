@@ -1,58 +1,126 @@
-<div class="box-header-equipamento">
-  <div class="card-body" style="background-color: white;">
-    <h3>Alteração da empresa</h3>
-    <form action="/empresaroutes/alterarroute" method="POST">
-      <input type="hidden" name="id" value="{{empresas.id}}">
-      <label for="nome">Nome da empresa:</label>
-      <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da empresa" class="form-control"
-        value="{{empresas.nomeEmpresa}}">
-      <br>
-      <label for="nome">CNPJ:</label>
-      <input type="text" id="CNPJ" name="CNPJ" placeholder="CNPJ" class="form-control" value="{{empresas.CNPJ}}">
-      <br>
-      <label for="nome">CEP:</label>
-      <input type="text" id="CEP" name="CEP" placeholder="CEP" class="form-control" value="{{empresas.CEP}}">
-      <br>
-      <label for="nome">Endereço da empresa:</label>
-      <input type="text" id="enderecoEmpresa" name="enderecoEmpresa" placeholder="Endereço da empresa"
-        class="form-control" value="{{empresas.enderecoEmpresa}}">
-      <br>
-      <label for="nome" id="label-file">Telefone:</label>
-      <input type="text" id="telefoneEmpresa" name="telefoneEmpresa" placeholder="Telefone de contato da empresa"
-        class="form-control" value="{{empresas.telefoneEmpresa}}">
-      <br>
-      <label for="nome" id="label-file">Email:</label>
-      <input type="email" id="emailEmpresa" name="emailEmpresa" placeholder="Email de contato da empresa"
-        class="form-control" value="{{empresas.emailEmpresa}}">
-      <br>
-      <label for="nome" id="label-file">Tipo Jurídico:</label>
-      <input type="text" id="tipoJuridicoEmpresa" name="tipoJuridicoEmpresa" placeholder="Tipo jurídico da empresa"
-        class="form-control" value="{{empresas.tipoJuridicoEmpresa}}">
-      <br>
-      <label for="nome">Nome da pessoa:</label>
-      <input type="text" id="nomePessoa" name="nomePessoa" placeholder="Nome da pessoa" class="form-control" value="{{empresas.nomePessoa}}">
-      <br>
-      <label for="nome">Telefone de contato:</label>
-      <input type="text" id="telefonePessoa" name="telefonePessoa" placeholder="Telefone de contato"
-        class="form-control" value="{{empresas.telefonePessoa}}">
-      <br>
-      <label for="nome">E-mail de contato:</label>
-      <input type="text" id="emailPessoa" name="emailPessoa" placeholder="E-mail de contato" class="form-control" value="{{empresas.emailPessoa}}">
-      <br>
-      <label for="nome">CPF:</label>
-      <input type="text" id="CPF" name="CPF" placeholder="CPF" class="form-control" value="{{empresas.CPF}}">
-      <br>
-      <label for="nome" id="label-file">RG:</label>
-      <input type="text" id="RG" name="RG" placeholder="RG" class="form-control" value="{{empresas.RG}}">
-      <br>
-      <label for="nome" id="label-file">Endereço:</label>
-      <input type="text" id="enderecoPessoa" name="enderecoPessoa" placeholder="Endereço da pessoa"
-        class="form-control" value="{{empresas.enderecoPessoa}}">
-      <br>
-      <button type="submit" class="btn btn-success">Alterar empresa</button>
-    </form>
-  </div>
+<div class="container mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="box-header">
+                <h3 class="text-center mb-4">Alteração de pedido</h3>
+                <form action="/empresaroutes/alterarroute" method="POST">
+                    <input type="hidden" name="id" value="{{empresas.id}}">
+
+                    <div class="form-group">
+                        <label for="nomeEmpresa">Nome da empresa:</label>
+                        <input type="text" id="nomeEmpresa" name="nomeEmpresa" placeholder="Nome da empresa"
+                            class="form-control" value="{{empresas.nomeEmpresa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CNPJ">CNPJ:</label>
+                        <input type="text" id="CNPJ" name="CNPJ" placeholder="CNPJ" class="form-control"
+                            value="{{empresas.CNPJ}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CEP">CEP:</label>
+                        <input type="text" id="CEP" name="CEP" placeholder="CEP" class="form-control"
+                            value="{{empresas.CEP}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enderecoEmpresa">Endereço da empresa:</label>
+                        <input type="text" id="enderecoEmpresa" name="enderecoEmpresa"
+                            placeholder="Endereço da empresa" class="form-control" value="{{empresas.enderecoEmpresa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefoneEmpresa">Telefone:</label>
+                        <input type="text" id="telefoneEmpresa" name="telefoneEmpresa"
+                            placeholder="Telefone de contato da empresa" class="form-control"
+                            value="{{empresas.telefoneEmpresa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emailEmpresa">Email:</label>
+                        <input type="email" id="emailEmpresa" name="emailEmpresa"
+                            placeholder="Email de contato da empresa" class="form-control" value="{{empresas.emailEmpresa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipoJuridicoEmpresa">Tipo Jurídico:</label>
+                        <input type="text" id="tipoJuridicoEmpresa" name="tipoJuridicoEmpresa"
+                            placeholder="Tipo jurídico da empresa" class="form-control"
+                            value="{{empresas.tipoJuridicoEmpresa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nomePessoa">Nome da pessoa:</label>
+                        <input type="text" id="nomePessoa" name="nomePessoa" placeholder="Nome da pessoa"
+                            class="form-control" value="{{empresas.nomePessoa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefonePessoa">Telefone de contato:</label>
+                        <input type="text" id="telefonePessoa" name="telefonePessoa" placeholder="Telefone de contato"
+                            class="form-control" value="{{empresas.telefonePessoa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emailPessoa">E-mail de contato:</label>
+                        <input type="text" id="emailPessoa" name="emailPessoa" placeholder="E-mail de contato"
+                            class="form-control" value="{{empresas.emailPessoa}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CPF">CPF:</label>
+                        <input type="text" id="CPF" name="CPF" placeholder="CPF" class="form-control"
+                            value="{{empresas.CPF}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="RG">RG:</label>
+                        <input type="text" id="RG" name="RG" placeholder="RG" class="form-control" value="{{empresas.RG}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="enderecoPessoa">Endereço:</label>
+                        <input type="text" id="enderecoPessoa" name="enderecoPessoa" placeholder="Endereço da pessoa"
+                            class="form-control" value="{{empresas.enderecoPessoa}}">
+                    </div>
+
+                    <button type="submit" class="btn btn-custom btn-lg btn-block">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .box-header {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .btn-custom {
+        background-color: #020060;
+        color: #ffffff;
+    }
+
+    .btn-custom:hover {
+        background-color: #011b4a;
+        color: #ffffff;
+        transition: 0.5s;
+    }
+</style>
 
 {{#each erros}}
 <div class="alert alert-danger">{{texto}}</div>

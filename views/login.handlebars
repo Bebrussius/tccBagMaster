@@ -1,5 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
 
-     <div class="containermt-custom" style=" margin-top: 10rem; /* Você pode ajustar o valor conforme necessário">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>BagMaster - Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #F8F9FA; /* Cor de fundo mais clara e neutra para UX design */
+        }
+
+        .containermt-custom {
+            margin-top: 10rem;
+        }
+
+        .card {
+            border: none; /* Removendo a borda do card */
+            border-radius: 15px; /* Borda arredondada para um visual mais suave */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar o card */
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-title {
+            color: #007BFF; /* Cor do título do card */
+            font-size: 2rem;
+        }
+
+        .form-label {
+            font-size: 1rem;
+            color: #495057; /* Cor do texto do formulário */
+        }
+
+        .form-control {
+            background-color: #fff; /* Cor de fundo do input */
+            border: 1px solid #ced4da; /* Borda do input */
+            border-radius: 5px; /* Borda arredondada do input */
+        }
+
+        .btn-login {
+            background-color: #007BFF; /* Cor do botão */
+            color: #fff; /* Cor do texto do botão */
+            border: none;
+            border-radius: 5px; /* Borda arredondada do botão */
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container containermt-custom">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
@@ -9,27 +67,25 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">E-mail:</label>
                                 <input type="text" id="email" name="email" placeholder="E-mail do usuário"
-                                    class="form-control" style="background-color: #D5D5D5;">
+                                    class="form-control">
                             </div>
                             <div class="mb-3">
                                 <label for="senha" class="form-label">Senha:</label>
                                 <input type="password" id="senha" name="senha" placeholder="Senha do usuário"
-                                    class="form-control" style="background-color: #D5D5D5;">
+                                    class="form-control">
                             </div>
 
-                            <button type="submit" class="btn  btn-block" style="background-color: #020060; color: #ffffff;">Entrar</button>
+                            <button type="submit" class="btn btn-block btn-login">Entrar</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
+</body>
 
-
-
-
-
-
+</html>
